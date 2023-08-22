@@ -1,1 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
+.app-card-min-width.card {
+  min-width: 19rem;
+}
+
+.app-alert-min-width.alert {
+  min-width: 12rem;
+}
