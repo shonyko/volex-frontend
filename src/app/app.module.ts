@@ -3,10 +3,14 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { SettingsComponent } from './pages/settings/settings.component';
+import { ThemeSelectorComponent } from './components/settings/theme-selector/theme-selector.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    SettingsComponent,
+    ThemeSelectorComponent
   ],
   imports: [
     BrowserModule,

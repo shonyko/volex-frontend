@@ -1,5 +1,6 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { Tooltip } from 'bootstrap';
+import { SettingsComponent } from './pages/settings/settings.component';
 
 type Tab = {
   title: string;
@@ -18,14 +19,18 @@ export class AppComponent implements OnInit, AfterViewInit {
   activeTab: Tab = {
     title: 'Agents',
     icon: 'bi-columns-gap',
-    routerLink: '',
+    routerLink: 'tst',
   };
 
   tabs: Tab[] = [
     this.activeTab,
-    { title: 'Blueprints', icon: 'bi-stack', routerLink: '' },
-    { title: 'Requests', icon: 'bi-broadcast-pin', routerLink: '' },
-    { title: 'Settings', icon: 'bi-house-gear', routerLink: '' },
+    { title: 'Blueprints', icon: 'bi-stack', routerLink: 'tst' },
+    { title: 'Requests', icon: 'bi-broadcast-pin', routerLink: 'tst' },
+    {
+      title: 'Settings',
+      icon: 'bi-house-gear',
+      routerLink: SettingsComponent.PATH,
+    },
   ];
 
   ngOnInit(): void {}
@@ -39,7 +44,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       document.querySelectorAll('[data-bs-toggle="tooltip"]')
     );
     tooltipTriggerList.map(function (tooltipTriggerEl) {
-      return new Tooltip(tooltipTriggerEl, { trigger: 'hover' });
+      return new Tooltip(tooltipTriggerEl);
     });
   }
 

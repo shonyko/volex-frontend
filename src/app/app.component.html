@@ -14,12 +14,12 @@
               class="nav-link p-3 rounded-0"
               aria-current="page"
               data-bs-toggle="tooltip"
+              data-bs-trigger="hover"
               data-bs-placement="auto"
               [attr.data-bs-original-title]="tab.title"
-              [class.active]="tab == activeTab"
               [title]="tab.title"
               [routerLink]="tab.routerLink"
-              (click)="changeTab(tab)"
+              routerLinkActive="active"
             >
               <i class="fs-1" [ngClass]="tab.icon"></i>
             </a>
