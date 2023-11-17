@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { Tooltip } from 'bootstrap';
+import { Tooltip, Toast } from 'bootstrap';
 import { SettingsComponent } from './pages/settings/settings.component';
 
 type Tab = {
@@ -33,10 +33,18 @@ export class AppComponent implements OnInit, AfterViewInit {
     },
   ];
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.initTheme();
+  }
 
   ngAfterViewInit(): void {
     this.initTooltips();
+  }
+
+  private initTheme() {
+    const theme = localStorage.getItem('theme') ?? 'dark';
+    const html = document.querySelector('html') as HTMLHtmlElement;
+    html.setAttribute('data-bs-theme', theme);
   }
 
   private initTooltips(): void {

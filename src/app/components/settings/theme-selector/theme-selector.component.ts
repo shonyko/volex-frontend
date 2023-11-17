@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, computed } from '@angular/core';
 
 @Component({
   selector: 'app-theme-selector',
@@ -18,7 +18,8 @@ export class ThemeSelectorComponent implements OnInit {
 
   toggleDarkMode() {
     const theme = this.darkMode() ? 'light' : 'dark';
-    this.htmlContainer.setAttribute('data-bs-theme', theme);
     this.darkMode.update((val) => !val);
+    this.htmlContainer.setAttribute('data-bs-theme', theme);
+    localStorage.setItem('theme', theme);
   }
 }
