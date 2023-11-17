@@ -6,3 +6,14 @@
 .app-alert-min-width.alert {
   min-width: 12rem;
 }
+
+.padding {
+  flex: 1 1 auto;
+}
+
+.content {
+  max-width: 40rem;
+  flex: 1 1 100%;
+  display: flex;
+  flex-direction: column;
+}
