@@ -1,0 +1,76 @@
+<h2 class="mb-0">
+  <!--
+  <button type="button" class="btn btn-sm py-0">
+      <span class="bi-box-arrow-left fs-2"></span>
+  </button>
+  -->
+  <span class="align-middle flex-grow-1 py-1">Requests</span>
+</h2>
+<hr class="mt-1 mb-2" />
+
+<div
+  class="px-0 d-flex flex-column flex-sm-row flex-xl-row flex-lg-row flex-md-row"
+  id="requestList"
+>
+  <div class="padding"></div>
+  <div class="content">
+    @if(requests().length === 0) {
+    <h5 class="text-danger"><span>Nothing here just yet!</span></h5>
+    } @else { @for(request of requests(); track request.id) {
+    <div class="card m-1 p-0 bg-danger-subtle app-card-min-width">
+      <div class="card-body px-0 py-1">
+        <h5
+          class="mb-1 ms-2 ps-1 pe-0 text-primary d-flex justify-content-between"
+        >
+          <span class="pl-1 align-middle">
+            {{ request.blueprint.displayName }}
+          </span>
+        </h5>
+        <form class="container-fluid">
+          <!---
+                    <div class="row mb-0">
+                        <label class="col-4 col-form-label py-1">Blueprint</label>
+                        <div class="col-8">
+                            <input type="text" readonly class="form-control-plaintext py-1" value="LED">
+                        </div>
+                    </div>
+                    --->
+
+          <div class="row mb-0">
+            <label class="col-4 col-form-label py-1">Mac</label>
+            <div class="col-8">
+              <input
+                type="text"
+                readonly
+                class="form-control-plaintext py-1"
+                [value]="request.macAddr"
+              />
+            </div>
+          </div>
+
+          <div class="row mb-0">
+            <label class="col-4 col-form-label py-1">Date</label>
+            <div class="col-4">
+              <input
+                type="text"
+                readonly
+                class="form-control-plaintext py-1"
+                [value]="request.date"
+              />
+            </div>
+
+            <div
+              class="col-4 d-flex justify-content-between align-content-center flex-wrap px-2"
+            >
+              <button type="button" class="btn btn-sm btn-success w-100 px-0">
+                <span class="bi-check2-square"></span><span> Allow</span>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    } }
+  </div>
+  <div class="padding"></div>
+</div>
