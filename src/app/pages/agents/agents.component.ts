@@ -23,6 +23,8 @@ export class AgentsComponent {
       blueprint: {
         id: 1,
         displayName: 'LED',
+        isHardware: true,
+        isValid: true,
       },
       macAddr: '12-34-56-78-90-ab',
     },
@@ -32,6 +34,8 @@ export class AgentsComponent {
       blueprint: {
         id: 2,
         displayName: 'SWITCH',
+        isHardware: true,
+        isValid: true,
       },
       macAddr: '12-34-56-78-90-ac',
     },
@@ -41,6 +45,8 @@ export class AgentsComponent {
       blueprint: {
         id: 3,
         displayName: 'TIMER',
+        isHardware: false,
+        isValid: true,
       },
       macAddr: 'none',
     },

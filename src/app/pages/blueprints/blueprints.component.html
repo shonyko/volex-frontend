@@ -1,0 +1,71 @@
+<h2 class="mb-0 d-flex">
+  <!-- <button type="button" class="btn btn-sm py-0">
+    <span class="bi-box-arrow-left fs-2"></span>
+  </button> -->
+  <span class="align-middle flex-grow-1 py-1">Blueprints</span>
+
+  <button type="button" class="btn btn-sm text-success py-0">
+    <span class="bi-window-plus fs-2"></span>
+  </button>
+</h2>
+<hr class="mt-1 mb-2" />
+
+<div
+  class="px-0 d-flex flex-column flex-sm-row flex-xl-row flex-lg-row flex-md-row"
+>
+  <div class="padding"></div>
+  <div class="content">
+    <div class="card m-1 border-0 app-card-min-width">
+      <div class="card-body p-0">
+        <div class="input-group input-group-xs">
+          <input
+            #search_bar
+            type="text"
+            class="form-control search-bar"
+            aria-label="Search"
+            (keyup)="onFilterChanged(search_bar.value)"
+          />
+          <button type="button" class="btn btn-outline-secondary">
+            <span class="bi-search"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    @for(blueprint of filteredBlueprints(); track blueprint.id) {
+    <div
+      class="card m-1 p-0 app-card-min-width"
+      [ngClass]="blueprint.isValid ? 'bg-info-subtle' : 'bg-danger-subtle'"
+    >
+      <div class="card-body p-0">
+        <form class="container-fluid">
+          <div class="d-flex">
+            <div class="flex-fill">
+              <label class="text-center col-form-label py-1 fs-2">
+                Blueprint:
+              </label>
+            </div>
+            <div class="flex-fill">
+              <!---<input type="text" readonly class="form-control-plaintext text-center py-1 fs-2" value="LED">--->
+              <label class="text-center col-form-label py-1 fs-2">
+                {{ blueprint.displayName }}
+              </label>
+            </div>
+
+            <div class="">
+              @if(blueprint.isHardware) {
+              <div style="width: 3.15rem; height: 3.15rem"></div>
+              } @else {
+              <button type="button" class="btn btn-sm text-danger">
+                <span class="bi-window-x fs-2"></span>
+              </button>
+              }
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    }
+  </div>
+  <div class="padding"></div>
+</div>

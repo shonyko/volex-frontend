@@ -18,6 +18,8 @@ export class RequestsComponent {
       blueprint: {
         id: 1,
         displayName: 'LED',
+        isHardware: true,
+        isValid: true,
       },
       macAddr: 'xx:xx:xx:xx:xx:xx',
       date: Date.now().toLocaleString(),
@@ -27,6 +29,8 @@ export class RequestsComponent {
       blueprint: {
         id: 2,
         displayName: 'SWITCH',
+        isHardware: true,
+        isValid: true,
       },
       macAddr: 'yy:yy:yy:yy:yy:yy',
       date: Date.now().toLocaleString(),

@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AgentsComponent } from './pages/agents/agents.component';
 import { RequestsComponent } from './pages/requests/requests.component';
+import { BlueprintsComponent } from './pages/blueprints/blueprints.component';
 
 type Tab = {
   title: string;
@@ -28,7 +29,11 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   tabs: Tab[] = [
     this.activeTab,
-    { title: 'Blueprints', icon: 'bi-stack', routerLink: 'tst' },
+    {
+      title: 'Blueprints',
+      icon: 'bi-stack',
+      routerLink: BlueprintsComponent.PATH,
+    },
     {
       title: 'Requests',
       icon: 'bi-broadcast-pin',
