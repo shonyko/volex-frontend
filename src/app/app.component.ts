@@ -3,6 +3,7 @@ import { Tooltip } from 'bootstrap';
 import { SettingsComponent } from './pages/settings/settings.component';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { AgentsComponent } from './pages/agents/agents.component';
 
 type Tab = {
   title: string;
@@ -21,7 +22,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   activeTab: Tab = {
     title: 'Agents',
     icon: 'bi-columns-gap',
-    routerLink: 'tst',
+    routerLink: AgentsComponent.PATH,
   };
 
   tabs: Tab[] = [
