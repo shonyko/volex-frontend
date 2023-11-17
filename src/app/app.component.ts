@@ -1,6 +1,8 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { Tooltip, Toast } from 'bootstrap';
+import { Tooltip } from 'bootstrap';
 import { SettingsComponent } from './pages/settings/settings.component';
+import { CommonModule } from '@angular/common';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
 type Tab = {
   title: string;
@@ -9,13 +11,13 @@ type Tab = {
 };
 
 @Component({
+  standalone: true,
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
+  styleUrl: './app.component.scss',
+  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive],
 })
 export class AppComponent implements OnInit, AfterViewInit {
-  title = 'volex-app';
-
   activeTab: Tab = {
     title: 'Agents',
     icon: 'bi-columns-gap',
@@ -54,10 +56,5 @@ export class AppComponent implements OnInit, AfterViewInit {
     tooltipTriggerList.map(function (tooltipTriggerEl) {
       return new Tooltip(tooltipTriggerEl);
     });
-  }
-
-  changeTab(tab: Tab) {
-    this.activeTab = tab;
-    console.log('test');
   }
 }

@@ -64,10 +64,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "volex-app:build:production"
+              "buildTarget": "volex-app:build:production"
             },
             "development": {
-              "browserTarget": "volex-app:build:development"
+              "buildTarget": "volex-app:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -75,7 +75,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "volex-app:build"
+            "buildTarget": "volex-app:build"
           }
         },
         "test": {

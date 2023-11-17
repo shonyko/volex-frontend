@@ -1,4 +1,4 @@
-import { Injectable, isDevMode } from '@angular/core';
+import { Injectable, inject, isDevMode } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Subject, takeUntil } from 'rxjs';
 import { WifiCredentials } from '../models/wifi-credentials';
@@ -9,7 +9,7 @@ const prefix = isDevMode() ? 'http://localhost:8080/' : 'api/';
   providedIn: 'root',
 })
 export class WifiCredentialsService {
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
 
   get(stop$: Subject<any>) {
     return this.http

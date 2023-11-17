@@ -1,9 +1,10 @@
-import { Component, OnInit, signal, computed } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 
 @Component({
+  standalone: true,
   selector: 'app-theme-selector',
   templateUrl: './theme-selector.component.html',
-  styleUrls: ['./theme-selector.component.scss'],
+  styleUrl: './theme-selector.component.scss',
 })
 export class ThemeSelectorComponent implements OnInit {
   htmlContainer!: HTMLHtmlElement;
