@@ -2,11 +2,12 @@ import { Component, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Agent } from 'src/app/models/agent';
 import { FormsModule } from '@angular/forms';
+import { RouterLink, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-agents',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink, RouterOutlet],
   templateUrl: './agents.component.html',
   styleUrl: './agents.component.scss',
 })
@@ -61,11 +62,19 @@ export class AgentsComponent {
     );
   });
 
+  getType(agent: Agent) {
+    return agent.macAddr != 'none' ? 'hardware' : 'software';
+  }
+
+  getPath(agent: Agent) {
+    return `${agent.id}`;
+  }
+
   onFilterChanged(newValue: string) {
     this.filterRaw.set(newValue);
   }
 
-  getType(agent: Agent) {
-    return agent.macAddr != 'none' ? 'hardware' : 'software';
+  onAgentSelected(agent: Agent) {
+    console.log(agent.id);
   }
 }

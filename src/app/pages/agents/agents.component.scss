@@ -1,3 +1,37 @@
+:host {
+  display: flex;
+  position: relative;
+  overflow-x: hidden;
+}
+
+#main {
+  flex: 1 1 auto;
+}
+
+#child {
+  position: absolute;
+  inset: 0;
+  overflow: auto;
+  translate: 101%;
+  // transition: translate 100ms;
+  transition: translate 350ms;
+  z-index: 2;
+
+  &:has(router-outlet + *) {
+    transition: translate 350ms ease-out;
+    translate: 0%;
+  }
+
+  &:has(router-outlet + .inactive) {
+    transition: translate 350ms;
+    translate: 101%;
+  }
+}
+
+.agent-link {
+  text-decoration: none;
+}
+
 .add-agent {
   min-height: 8.25rem;
 }
@@ -10,4 +44,18 @@
 
 .search-bar {
   font-size: 1.5rem;
+}
+
+.agent.card {
+  cursor: pointer;
+
+  * {
+    pointer-events: none;
+  }
+
+  transition: filter 150ms;
+
+  &:hover {
+    filter: brightness(150%);
+  }
 }

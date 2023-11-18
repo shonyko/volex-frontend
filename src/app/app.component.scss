@@ -1,0 +1,3 @@
+#content > router-outlet + ::ng-deep * {
+  flex: 1 1 auto;
+}
