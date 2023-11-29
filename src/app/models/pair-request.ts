@@ -1,8 +1,6 @@
-import { Blueprint } from './blueprint';
-
 export type PairRequest = {
   id: number;
-  blueprint: Blueprint;
+  blueprintId: number;
   macAddr: string;
   date: string;
 };

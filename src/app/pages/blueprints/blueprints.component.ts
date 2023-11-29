@@ -1,6 +1,6 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Blueprint } from 'src/app/models/blueprint';
+import { BlueprintsService } from 'src/app/services/blueprints.service';
 
 @Component({
   selector: 'app-blueprints',
@@ -12,40 +12,17 @@ import { Blueprint } from 'src/app/models/blueprint';
 export class BlueprintsComponent {
   static PATH: string = 'blueprints';
 
+  private blueprintsService = inject(BlueprintsService);
+
   filterRaw = signal<string>('');
   filter = computed(() => this.filterRaw().trim().toLowerCase());
 
-  blueprints = signal<Blueprint[]>([
-    {
-      id: 1,
-      displayName: 'LED',
-      isHardware: true,
-      isValid: true,
-    },
-    {
-      id: 2,
-      displayName: 'SWITCH',
-      isHardware: true,
-      isValid: true,
-    },
-    {
-      id: 3,
-      displayName: 'TIMER',
-      isHardware: false,
-      isValid: false,
-    },
-    {
-      id: 4,
-      displayName: 'Multiplexer',
-      isHardware: false,
-      isValid: true,
-    },
-  ]);
+  blueprints = this.blueprintsService.blueprints;
 
   filteredBlueprints = computed(() => {
     if (this.filter().length === 0) return this.blueprints();
     return this.blueprints().filter((a) =>
-      a.displayName.toLowerCase().includes(this.filter())
+      a().displayName.toLowerCase().includes(this.filter())
     );
   });
 

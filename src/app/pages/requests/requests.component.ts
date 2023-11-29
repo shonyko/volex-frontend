@@ -1,6 +1,7 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PairRequest } from 'src/app/models/pair-request';
+import { PairRequestsService } from 'src/app/services/pair-requests.service';
+import { BlueprintsService } from 'src/app/services/blueprints.service';
 
 @Component({
   selector: 'app-requests',
@@ -12,28 +13,8 @@ import { PairRequest } from 'src/app/models/pair-request';
 export class RequestsComponent {
   static PATH: string = 'requests';
 
-  requests = signal<PairRequest[]>([
-    {
-      id: 1,
-      blueprint: {
-        id: 1,
-        displayName: 'LED',
-        isHardware: true,
-        isValid: true,
-      },
-      macAddr: 'xx:xx:xx:xx:xx:xx',
-      date: Date.now().toLocaleString(),
-    },
-    {
-      id: 2,
-      blueprint: {
-        id: 2,
-        displayName: 'SWITCH',
-        isHardware: true,
-        isValid: true,
-      },
-      macAddr: 'yy:yy:yy:yy:yy:yy',
-      date: Date.now().toLocaleString(),
-    },
-  ]);
+  private requestsService = inject(PairRequestsService);
+  blueprintsService = inject(BlueprintsService);
+
+  requests = this.requestsService.pairRequests;
 }

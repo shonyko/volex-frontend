@@ -14,27 +14,25 @@
 >
   <div class="padding"></div>
   <div class="content">
-    @if(requests().length === 0) {
-    <h5 class="text-danger"><span>Nothing here just yet!</span></h5>
-    } @else { @for(request of requests(); track request.id) {
+    @for(request of requests(); track request().id) {
     <div class="card m-1 p-0 bg-danger-subtle app-card-min-width">
       <div class="card-body px-0 py-1">
         <h5
           class="mb-1 ms-2 ps-1 pe-0 text-primary d-flex justify-content-between"
         >
           <span class="pl-1 align-middle">
-            {{ request.blueprint.displayName }}
+            {{ blueprintsService.getById(request().id)()?.displayName }}
           </span>
         </h5>
         <form class="container-fluid">
           <!---
-                    <div class="row mb-0">
-                        <label class="col-4 col-form-label py-1">Blueprint</label>
-                        <div class="col-8">
-                            <input type="text" readonly class="form-control-plaintext py-1" value="LED">
-                        </div>
-                    </div>
-                    --->
+                      <div class="row mb-0">
+                          <label class="col-4 col-form-label py-1">Blueprint</label>
+                          <div class="col-8">
+                              <input type="text" readonly class="form-control-plaintext py-1" value="LED">
+                          </div>
+                      </div>
+                      --->
 
           <div class="row mb-0">
             <label class="col-4 col-form-label py-1">Mac</label>
@@ -43,7 +41,7 @@
                 type="text"
                 readonly
                 class="form-control-plaintext py-1"
-                [value]="request.macAddr"
+                [value]="request().macAddr"
               />
             </div>
           </div>
@@ -55,7 +53,7 @@
                 type="text"
                 readonly
                 class="form-control-plaintext py-1"
-                [value]="request.date"
+                [value]="request().date"
               />
             </div>
 
@@ -70,7 +68,9 @@
         </form>
       </div>
     </div>
-    } }
+    } @empty {
+    <h5 class="text-danger"><span>Nothing here just yet!</span></h5>
+    }
   </div>
   <div class="padding"></div>
 </div>

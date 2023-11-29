@@ -30,45 +30,48 @@
           </div>
         </div>
       </div>
-      @for(agent of filteredAgents(); track agent.id) {
-      <a class="agent-link" href="#" [routerLink]="getPath(agent)">
+      @for(agent of filteredAgents(); track agent().id) {
+      <a class="agent-link" href="#" [routerLink]="getPath(agent())">
         <div
           class="card m-1 p-0 bg-primary-subtle app-card-min-width agent"
-          (click)="onAgentSelected(agent)"
+          (click)="onAgentSelected(agent())"
         >
           <div class="card-body p-0">
             <h5
               class="mb-1 ms-2 ps-1 pe-0 text-primary d-flex justify-content-between"
             >
-              <span class="pl-1 align-middle">{{ agent.name }}</span>
+              <span class="pl-1 align-middle">{{ agent().name }}</span>
               <button type="button" class="btn btn-sm text-primary py-0 pr-1">
                 <span class="bi-arrow-right-square fs-6"></span>
               </button>
             </h5>
             <form class="container-fluid">
               <div class="row mb-0">
-                <label class="col-4 col-form-label py-1 text-nowrap"
-                  >Type</label
-                >
+                <label class="col-4 col-form-label py-1 text-nowrap">
+                  Type
+                </label>
                 <div class="col-8">
                   <input
                     type="text"
                     readonly
                     class="form-control-plaintext py-1"
-                    [value]="getType(agent)"
+                    [value]="getType(agent())"
                   />
                 </div>
               </div>
               <div class="row mb-0">
-                <label class="col-4 col-form-label py-1 text-nowrap"
-                  >Blueprint</label
-                >
+                <label class="col-4 col-form-label py-1 text-nowrap">
+                  Blueprint
+                </label>
                 <div class="col-8">
                   <input
                     type="text"
                     readonly
                     class="form-control-plaintext py-1"
-                    [value]="agent.blueprint.displayName"
+                    [value]="
+                      blueprintsService.getById(agent().blueprintId)()
+                        ?.displayName
+                    "
                   />
                 </div>
               </div>
@@ -80,7 +83,7 @@
                     type="text"
                     readonly
                     class="form-control-plaintext py-1"
-                    [value]="agent.macAddr"
+                    [value]="agent().macAddr"
                   />
                 </div>
               </div>

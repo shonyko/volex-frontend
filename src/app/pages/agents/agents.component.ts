@@ -1,8 +1,10 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Agent } from 'src/app/models/agent';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, RouterOutlet } from '@angular/router';
+import { AgentsService } from 'src/app/services/agents.service';
+import { Agent } from 'src/app/models/agent';
+import { BlueprintsService } from 'src/app/services/blueprints.service';
 
 @Component({
   selector: 'app-agents',
@@ -14,51 +16,20 @@ import { RouterLink, RouterOutlet } from '@angular/router';
 export class AgentsComponent {
   static PATH: string = 'agents';
 
+  private agentsService = inject(AgentsService);
+  blueprintsService = inject(BlueprintsService);
+
   filterRaw = signal<string>('');
   filter = computed(() => this.filterRaw().trim().toLowerCase());
 
-  agents = signal<Agent[]>([
-    {
-      id: 1,
-      name: 'agentLED',
-      blueprint: {
-        id: 1,
-        displayName: 'LED',
-        isHardware: true,
-        isValid: true,
-      },
-      macAddr: '12-34-56-78-90-ab',
-    },
-    {
-      id: 2,
-      name: 'agentSWITCH',
-      blueprint: {
-        id: 2,
-        displayName: 'SWITCH',
-        isHardware: true,
-        isValid: true,
-      },
-      macAddr: '12-34-56-78-90-ac',
-    },
-    {
-      id: 3,
-      name: 'agentTIMER',
-      blueprint: {
-        id: 3,
-        displayName: 'TIMER',
-        isHardware: false,
-        isValid: true,
-      },
-      macAddr: 'none',
-    },
-  ]);
+  agents = this.agentsService.agents;
 
   filteredAgents = computed(() => {
     if (this.filter().length === 0) return this.agents();
     return this.agents().filter(
       (a) =>
-        a.name.toLowerCase().includes(this.filter()) ||
-        a.macAddr.toLowerCase().includes(this.filter())
+        a().name.toLowerCase().includes(this.filter()) ||
+        a().macAddr?.toLowerCase().includes(this.filter())
     );
   });
 

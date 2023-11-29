@@ -3,7 +3,7 @@
     <span class="bi-box-arrow-left fs-2"></span>
   </button>
 
-  <span class="align-middle flex-grow-1 py-1">Agent Name</span>
+  <span class="align-middle flex-grow-1 py-1">{{ agent()?.name }}</span>
 
   <button type="button" class="btn btn-sm text-danger py-0">
     <span class="bi-pencil-square fs-2"></span>
@@ -28,7 +28,7 @@
             <label
               class="flex-fill col-auto text-center col-form-label py-1 fs-2"
             >
-              LED
+              {{ blueprint()?.displayName }}
             </label>
           </div>
         </form>

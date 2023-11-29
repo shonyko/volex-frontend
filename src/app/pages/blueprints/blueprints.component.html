@@ -32,10 +32,10 @@
       </div>
     </div>
 
-    @for(blueprint of filteredBlueprints(); track blueprint.id) {
+    @for(blueprint of filteredBlueprints(); track blueprint().id) {
     <div
       class="card m-1 p-0 app-card-min-width"
-      [ngClass]="blueprint.isValid ? 'bg-info-subtle' : 'bg-danger-subtle'"
+      [ngClass]="blueprint().isValid ? 'bg-info-subtle' : 'bg-danger-subtle'"
     >
       <div class="card-body p-0">
         <form class="container-fluid">
@@ -48,12 +48,12 @@
             <div class="flex-fill">
               <!---<input type="text" readonly class="form-control-plaintext text-center py-1 fs-2" value="LED">--->
               <label class="text-center col-form-label py-1 fs-2">
-                {{ blueprint.displayName }}
+                {{ blueprint().displayName }}
               </label>
             </div>
 
             <div class="">
-              @if(blueprint.isHardware) {
+              @if(blueprint().isHardware) {
               <div style="width: 3.15rem; height: 3.15rem"></div>
               } @else {
               <button type="button" class="btn btn-sm text-danger">
