@@ -159,6 +159,22 @@ const params: Param[] = [
     value: '500',
     agentId: SWITCH_AGENT.id,
   },
+  {
+    id: getParamId(),
+    name: 'Color',
+    blueprintId: SWITCH_BLUEPRINT.id,
+    dataType: DataType.RGB,
+    value: '#ff00a2',
+    agentId: SWITCH_AGENT.id,
+  },
+  {
+    id: getParamId(),
+    name: 'JSON',
+    blueprintId: SWITCH_BLUEPRINT.id,
+    dataType: DataType.JSON,
+    value: '{}',
+    agentId: SWITCH_AGENT.id,
+  },
 ];
 
 const getPinId = getIdGenerator();

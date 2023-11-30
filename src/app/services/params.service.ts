@@ -24,6 +24,27 @@ export class ParamsService extends BaseService<Param> {
         }
         this.loaded.set(true);
       });
+
+    // simulate websocket update
+    // setTimeout(() => {
+    //   this.itemList()[0].update((p) => {
+    //     console.log(p);
+    //     p.value = 'false';
+    //     return p;
+    //   });
+    // }, 5000);
+  }
+
+  update(id: number, value: string) {
+    //TODO: send it to the backend
+    console.log(value);
+    var signal = this.getWritableById(id);
+    if (signal != null) {
+      signal.update((p) => {
+        p.value = value;
+        return p;
+      });
+    }
   }
 
   get params() {

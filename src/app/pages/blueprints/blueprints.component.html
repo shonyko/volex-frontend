@@ -23,7 +23,7 @@
             type="text"
             class="form-control search-bar"
             aria-label="Search"
-            (keyup)="onFilterChanged(search_bar.value)"
+            (input)="onFilterChanged(search_bar.value)"
           />
           <button type="button" class="btn btn-outline-secondary">
             <span class="bi-search"></span>

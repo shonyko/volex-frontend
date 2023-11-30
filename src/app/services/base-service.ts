@@ -18,13 +18,16 @@ export class BaseService<T extends HasId> {
   updateItem(item: T) {
     let s = this.itemMap.get(item.id);
     if (s == null) {
-      s = signal(item);
-      this.addToList(s as WritableSignal<T>);
-    } else if (s() == null) {
-      s.set(item);
+      s = signal(null);
+      this.itemMap.set(item.id, s);
+    }
+
+    const old_val = s();
+    s.set(item);
+
+    if (old_val == null) {
       this.addToList(s as WritableSignal<T>);
     }
-    this.itemMap.set(item.id, s);
   }
 
   getById(id: number): Signal<T | null> {
@@ -35,5 +38,13 @@ export class BaseService<T extends HasId> {
     const s = signal(null);
     this.itemMap.set(id, s);
     return s;
+  }
+
+  protected getWritableById(id: number): WritableSignal<T> | null {
+    if (this.itemMap.has(id)) {
+      return this.itemMap.get(id)! as WritableSignal<T>;
+    }
+
+    return null;
   }
 }
