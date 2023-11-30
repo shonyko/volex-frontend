@@ -1,6 +1,6 @@
-import { Component, HostBinding, computed, inject } from '@angular/core';
-import { CommonModule, Location } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { Component, computed, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { AgentsService } from 'src/app/services/agents.service';
 import { BlueprintsService } from 'src/app/services/blueprints.service';
 import { ParamsService } from 'src/app/services/params.service';
@@ -34,12 +34,9 @@ function parseId(str: string | null): Result<number, string> {
   standalone: true,
   templateUrl: './agent.component.html',
   styleUrl: './agent.component.scss',
-  imports: [CommonModule, AgentParamComponent],
+  imports: [CommonModule, AgentParamComponent, RouterLink],
 })
 export class AgentComponent {
-  @HostBinding('class') controlClass = '';
-
-  private location = inject(Location);
   private route = inject(ActivatedRoute);
   private agentsService = inject(AgentsService);
   private blueprintsService = inject(BlueprintsService);
@@ -89,15 +86,6 @@ export class AgentComponent {
     const id = this.agentId();
     return this.pinsService.params().filter((p) => p().agentId == id);
   });
-
-  private back() {
-    this.location.back();
-  }
-
-  onBack() {
-    this.controlClass = 'inactive';
-    setTimeout(this.back.bind(this), 215);
-  }
 
   getPinTypeName(pin: Pin) {
     return PinType[pin.pinType].toLowerCase() + 'put';

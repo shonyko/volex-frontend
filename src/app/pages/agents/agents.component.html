@@ -1,114 +1,105 @@
-<div id="main">
-  <h2 class="mb-0">
-    <!--
+<h2 class="mb-0 d-flex">
+  <!--
   <button type="button" class="btn btn-sm py-0">
       <span class="bi-box-arrow-left fs-2"></span>
   </button>
   -->
-    <span class="align-middle flex-grow-1 py-1">Agents</span>
-  </h2>
-  <hr class="mt-1 mb-2" />
+  <span class="align-middle flex-grow-1 py-1">Agents</span>
+</h2>
+<hr class="mt-1 mb-2" />
 
-  <div
-    class="px-0 d-flex flex-column flex-sm-row flex-xl-row flex-lg-row flex-md-row"
-  >
-    <div class="padding"></div>
-    <div class="content">
-      <div class="card m-1 border-0 app-card-min-width">
-        <div class="card-body p-0">
-          <div class="input-group input-group-xs">
-            <input
-              #search_bar
-              type="text"
-              class="form-control search-bar"
-              aria-label="Search"
-              (input)="onFilterChanged(search_bar.value)"
-            />
-            <button type="button" class="btn btn-outline-secondary">
-              <span class="bi-search"></span>
-            </button>
-          </div>
-        </div>
-      </div>
-      @for(agent of filteredAgents(); track agent().id) {
-      <a class="agent-link" href="#" [routerLink]="getPath(agent())">
-        <div
-          class="card m-1 p-0 bg-primary-subtle app-card-min-width agent"
-          (click)="onAgentSelected(agent())"
-        >
-          <div class="card-body p-0">
-            <h5
-              class="mb-1 ms-2 ps-1 pe-0 text-primary d-flex justify-content-between"
-            >
-              <span class="pl-1 align-middle">{{ agent().name }}</span>
-              <button type="button" class="btn btn-sm text-primary py-0 pr-1">
-                <span class="bi-arrow-right-square fs-6"></span>
-              </button>
-            </h5>
-            <form class="container-fluid">
-              <div class="row mb-0">
-                <label class="col-4 col-form-label py-1 text-nowrap">
-                  Type
-                </label>
-                <div class="col-8">
-                  <input
-                    type="text"
-                    readonly
-                    class="form-control-plaintext py-1"
-                    [value]="getType(agent())"
-                  />
-                </div>
-              </div>
-              <div class="row mb-0">
-                <label class="col-4 col-form-label py-1 text-nowrap">
-                  Blueprint
-                </label>
-                <div class="col-8">
-                  <input
-                    type="text"
-                    readonly
-                    class="form-control-plaintext py-1"
-                    [value]="
-                      blueprintsService.getById(agent().blueprintId)()
-                        ?.displayName
-                    "
-                  />
-                </div>
-              </div>
-
-              <div class="row mb-0">
-                <label class="col-4 col-form-label py-1 text-nowrap">Mac</label>
-                <div class="col-8">
-                  <input
-                    type="text"
-                    readonly
-                    class="form-control-plaintext py-1"
-                    [ngClass]="getType(agent())"
-                    [value]="agent().macAddr ?? 'none'"
-                  />
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-      </a>
-      }
-
-      <div class="card m-1 border-0 app-card-min-width add-agent">
-        <div class="card-body p-0 d-flex">
-          <button
-            id="agents_blueprints"
-            type="button"
-            class="btn btn-outline-success w-100 flex-fill"
-          >
-            <span class="bi-plus-square-dotted"></span><span> Add Virtual</span>
+<div
+  class="px-0 d-flex flex-column flex-sm-row flex-xl-row flex-lg-row flex-md-row"
+>
+  <div class="padding"></div>
+  <div class="content">
+    <div class="card m-1 border-0 app-card-min-width">
+      <div class="card-body p-0">
+        <div class="input-group input-group-xs">
+          <input
+            #search_bar
+            type="text"
+            class="form-control search-bar"
+            aria-label="Search"
+            (input)="onFilterChanged(search_bar.value)"
+          />
+          <button type="button" class="btn btn-outline-secondary">
+            <span class="bi-search"></span>
           </button>
         </div>
       </div>
     </div>
-    <div class="padding"></div>
+    @for(agent of filteredAgents(); track agent().id) {
+    <div
+      class="card m-1 p-0 bg-primary-subtle app-card-min-width agent"
+      (click)="onAgentSelected(agent())"
+      [routerLink]="getPath(agent())"
+    >
+      <div class="card-body p-0">
+        <h5
+          class="mb-1 ms-2 ps-1 pe-0 text-primary d-flex justify-content-between"
+        >
+          <span class="pl-1 align-middle">{{ agent().name }}</span>
+          <button type="button" class="btn btn-sm text-primary py-0 pr-1">
+            <span class="bi-arrow-right-square fs-6"></span>
+          </button>
+        </h5>
+        <form class="container-fluid">
+          <div class="row mb-0">
+            <label class="col-4 col-form-label py-1 text-nowrap"> Type </label>
+            <div class="col-8">
+              <input
+                type="text"
+                readonly
+                class="form-control-plaintext py-1"
+                [value]="getType(agent())"
+              />
+            </div>
+          </div>
+          <div class="row mb-0">
+            <label class="col-4 col-form-label py-1 text-nowrap">
+              Blueprint
+            </label>
+            <div class="col-8">
+              <input
+                type="text"
+                readonly
+                class="form-control-plaintext py-1"
+                [value]="
+                  blueprintsService.getById(agent().blueprintId)()?.displayName
+                "
+              />
+            </div>
+          </div>
+
+          <div class="row mb-0">
+            <label class="col-4 col-form-label py-1 text-nowrap">Mac</label>
+            <div class="col-8">
+              <input
+                type="text"
+                readonly
+                class="form-control-plaintext py-1"
+                [ngClass]="getType(agent())"
+                [value]="agent().macAddr ?? 'none'"
+              />
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    }
+
+    <div class="card m-1 border-0 app-card-min-width add-agent">
+      <div class="card-body p-0 d-flex">
+        <button
+          id="agents_blueprints"
+          type="button"
+          class="btn btn-outline-success w-100 flex-fill"
+        >
+          <span class="bi-plus-square-dotted"></span><span> Add Virtual</span>
+        </button>
+      </div>
+    </div>
   </div>
-</div>
-<div id="child">
-  <router-outlet />
+  <div class="padding"></div>
 </div>

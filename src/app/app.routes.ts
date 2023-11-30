@@ -8,8 +8,8 @@ import { AgentComponent } from './pages/agent/agent.component';
 export const routes: Routes = [
   {
     path: AgentsComponent.PATH,
-    component: AgentsComponent,
     children: [
+      { path: '', component: AgentsComponent },
       {
         path: ':id',
         component: AgentComponent,
