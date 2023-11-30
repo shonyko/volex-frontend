@@ -38,6 +38,7 @@
 
     <h5 class="mb-1 px-1 text-primary">Params</h5>
 
+    @for (param of params(); track param().id) {
     <!-- <div
   class="px-0 d-flex flex-column flex-sm-row flex-xl-row flex-lg-row flex-md-row"
   id="paramList"
@@ -89,6 +90,9 @@
       </div>
     </div>
     <!-- </div> -->
+    } @empty {
+    <div class="empty">No params</div>
+    }
 
     <h5 class="mb-1 px-1 text-primary">Pins</h5>
 

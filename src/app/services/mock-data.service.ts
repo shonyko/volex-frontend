@@ -3,6 +3,8 @@ import { Agent } from '../models/agent';
 import { of } from 'rxjs';
 import { Blueprint } from '../models/blueprint';
 import { PairRequest } from '../models/pair-request';
+import { Param } from '../models/param';
+import { DataType } from '../models/data-type';
 
 function getIdGenerator() {
   let id = 1;
@@ -70,6 +72,13 @@ const blueprints: Blueprint[] = [
 
 const getAgentId = getIdGenerator();
 
+const SWITCH_AGENT = {
+  id: getAgentId(),
+  name: 'Switch agent',
+  blueprintId: SWITCH_BLUEPRINT.id,
+  macAddr: getRandomMac(),
+};
+
 const agents: Agent[] = [
   {
     id: getAgentId(),
@@ -83,12 +92,7 @@ const agents: Agent[] = [
     blueprintId: RGB_BLUEPRINT.id,
     macAddr: getRandomMac(),
   },
-  {
-    id: getAgentId(),
-    name: 'Switch agent',
-    blueprintId: SWITCH_BLUEPRINT.id,
-    macAddr: getRandomMac(),
-  },
+  SWITCH_AGENT,
   {
     id: getAgentId(),
     name: 'Slider agent',
@@ -132,6 +136,27 @@ const requests: PairRequest[] = [
   },
 ];
 
+const getParamId = getIdGenerator();
+
+const params: Param[] = [
+  {
+    id: getParamId(),
+    name: 'Publish on change',
+    blueprintId: SWITCH_BLUEPRINT.id,
+    dataType: DataType.BOOLEAN,
+    value: 'true',
+    agentId: SWITCH_AGENT.id,
+  },
+  {
+    id: getParamId(),
+    name: 'Push period (ms)',
+    blueprintId: SWITCH_BLUEPRINT.id,
+    dataType: DataType.INTEGER,
+    value: '500',
+    agentId: SWITCH_AGENT.id,
+  },
+];
+
 @Injectable({
   providedIn: 'root',
 })
@@ -146,5 +171,9 @@ export class MockDataService {
 
   getRequests() {
     return of(requests);
+  }
+
+  getParams() {
+    return of(params);
   }
 }

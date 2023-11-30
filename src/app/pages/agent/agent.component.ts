@@ -10,6 +10,7 @@ import { CommonModule, Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { AgentsService } from 'src/app/services/agents.service';
 import { BlueprintsService } from 'src/app/services/blueprints.service';
+import { ParamsService } from 'src/app/services/params.service';
 
 @Component({
   selector: 'app-agent',
@@ -25,6 +26,7 @@ export class AgentComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private agentsService = inject(AgentsService);
   private blueprintsService = inject(BlueprintsService);
+  private paramsService = inject(ParamsService);
 
   agentId = signal<number | null>(null);
   agent = computed(() => {
@@ -41,6 +43,13 @@ export class AgentComponent implements OnInit {
       return null;
     }
     return this.blueprintsService.getById(agent.blueprintId)?.();
+  });
+  params = computed(() => {
+    const id = this.agentId();
+    if (id == null) {
+      return [];
+    }
+    return this.paramsService.params().filter((p) => p().agentId == id);
   });
 
   constructor() {}
