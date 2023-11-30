@@ -34,7 +34,7 @@ export class AgentsComponent {
   });
 
   getType(agent: Agent) {
-    return agent.macAddr != 'none' ? 'hardware' : 'software';
+    return agent.macAddr ? 'hardware' : 'software';
   }
 
   getPath(agent: Agent) {

@@ -83,7 +83,8 @@
                     type="text"
                     readonly
                     class="form-control-plaintext py-1"
-                    [value]="agent().macAddr"
+                    [ngClass]="getType(agent())"
+                    [value]="agent().macAddr ?? 'none'"
                   />
                 </div>
               </div>

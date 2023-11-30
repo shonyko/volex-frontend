@@ -5,6 +5,8 @@ import { Blueprint } from '../models/blueprint';
 import { PairRequest } from '../models/pair-request';
 import { Param } from '../models/param';
 import { DataType } from '../models/data-type';
+import { Pin } from '../models/pin';
+import { PinType } from '../models/pin-type';
 
 function getIdGenerator() {
   let id = 1;
@@ -72,6 +74,13 @@ const blueprints: Blueprint[] = [
 
 const getAgentId = getIdGenerator();
 
+const LED_AGENT = {
+  id: getAgentId(),
+  name: 'LED agent',
+  blueprintId: LED_BLUEPRINT.id,
+  macAddr: getRandomMac(),
+};
+
 const SWITCH_AGENT = {
   id: getAgentId(),
   name: 'Switch agent',
@@ -80,12 +89,7 @@ const SWITCH_AGENT = {
 };
 
 const agents: Agent[] = [
-  {
-    id: getAgentId(),
-    name: 'LED agent',
-    blueprintId: LED_BLUEPRINT.id,
-    macAddr: getRandomMac(),
-  },
+  LED_AGENT,
   {
     id: getAgentId(),
     name: 'RGB agent',
@@ -157,6 +161,43 @@ const params: Param[] = [
   },
 ];
 
+const getPinId = getIdGenerator();
+
+const SWITCH_PIN = {
+  id: getPinId(),
+  name: 'Value',
+  pinType: PinType.OUT,
+  dataType: DataType.BOOLEAN,
+  blueprintId: SWITCH_BLUEPRINT.id,
+  agentId: SWITCH_AGENT.id,
+  value: 'false',
+  srcPinId: null,
+};
+
+const pins: Pin[] = [
+  {
+    id: getPinId(),
+    name: 'Power',
+    pinType: PinType.IN,
+    dataType: DataType.BOOLEAN,
+    blueprintId: LED_BLUEPRINT.id,
+    agentId: LED_AGENT.id,
+    value: 'false',
+    srcPinId: SWITCH_PIN.id,
+  },
+  {
+    id: getPinId(),
+    name: 'Brightness',
+    pinType: PinType.IN,
+    dataType: DataType.INTEGER,
+    blueprintId: LED_BLUEPRINT.id,
+    agentId: LED_AGENT.id,
+    value: '100',
+    srcPinId: null,
+  },
+  SWITCH_PIN,
+];
+
 @Injectable({
   providedIn: 'root',
 })
@@ -175,5 +216,9 @@ export class MockDataService {
 
   getParams() {
     return of(params);
+  }
+
+  getPins() {
+    return of(pins);
   }
 }

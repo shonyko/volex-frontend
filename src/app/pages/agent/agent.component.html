@@ -46,12 +46,12 @@
     <div class="card m-1 p-0 bg-info-subtle app-card-min-width">
       <div class="card-body p-0">
         <h5
-          class="mb-1 ms-2 ps-1 pe-0 text-primary d-flex justify-content-between"
+          class="mb-1 ms-2 ps-1 pe-0 text-primary d-flex justify-content-between py-1"
         >
-          <span class="pl-1 align-middle">paramLED</span>
-          <button type="button" class="btn btn-sm text-primary py-0 pr-1">
+          <span class="pl-1 align-middle">{{ param().name }}</span>
+          <!-- <button type="button" class="btn btn-sm text-primary py-0 pr-1">
             <span class="bi-arrow-right-square fs-6"></span>
-          </button>
+          </button> -->
         </h5>
 
         <form class="container-fluid">
@@ -70,7 +70,7 @@
                 type="text"
                 readonly
                 class="form-control-plaintext py-1"
-                value="LED"
+                [value]="getDataTypeName(param())"
               />
             </div>
           </div>
@@ -82,7 +82,7 @@
                 type="text"
                 readonly
                 class="form-control-plaintext py-1"
-                value="someValue"
+                [value]="param().value"
               />
             </div>
           </div>
@@ -96,6 +96,7 @@
 
     <h5 class="mb-1 px-1 text-primary">Pins</h5>
 
+    @for (pin of pins(); track pin().id) {
     <!-- <div
   class="px-0 d-flex flex-column flex-sm-row flex-xl-row flex-lg-row flex-md-row"
   id="pinList"
@@ -103,25 +104,41 @@
     <div class="card m-1 p-0 bg-warning-subtle app-card-min-width">
       <div class="card-body p-0">
         <h5
-          class="mb-1 ms-2 ps-1 pe-0 text-primary d-flex justify-content-between"
+          class="mb-1 ms-2 ps-1 pe-0 text-primary d-flex justify-content-between py-1"
         >
-          <span class="pl-1 align-middle">pinLED</span>
-          <button type="button" class="btn btn-sm text-primary py-0 pr-1">
+          <span class="pl-1 align-middle">{{ pin().name }}</span>
+          <!-- <button type="button" class="btn btn-sm text-primary py-0 pr-1">
             <span class="bi-arrow-right-square fs-6"></span>
-          </button>
+          </button> -->
         </h5>
 
         <form class="container-fluid">
           <div class="row mb-0">
-            <label class="col-4 col-form-label py-1">Agent</label>
-            <div class="col-8">
+            <label class="col-4 col-form-label py-1">Source</label>
+            <div class="col-4">
               <input
                 type="text"
                 readonly
                 class="form-control-plaintext py-1"
-                value="agentLED/Disconected"
+                [class.disconnected]="!isPinConnected(pin())"
+                [value]="getPinConnection(pin())"
               />
             </div>
+            @if(isPinConnected(pin())) {
+            <div
+              class="col-4 d-flex justify-content-between align-content-center flex-wrap px-2"
+            >
+              <button
+                id="agent_blueprints"
+                type="button"
+                class="btn btn-sm btn-danger w-100 px-0"
+                data-bs-toggle="modal"
+                data-bs-target="#unlinkAgent"
+              >
+                <span class="bi-dash-square-dotted"></span><span> Unlink</span>
+              </button>
+            </div>
+            }
           </div>
 
           <div class="row mb-0">
@@ -131,7 +148,7 @@
                 type="text"
                 readonly
                 class="form-control-plaintext py-1"
-                value="output"
+                [value]="getPinTypeName(pin())"
               />
             </div>
           </div>
@@ -139,11 +156,14 @@
       </div>
     </div>
     <!-- </div> -->
+    }@empty {
+    <div class="empty">No pins</div>
+    }
 
     <!-- <div
   class="px-0 d-flex flex-column flex-sm-row flex-xl-row flex-lg-row flex-md-row"
 > -->
-    <div class="card m-1 border-0 app-card-min-width">
+    <!-- <div class="card m-1 border-0 app-card-min-width">
       <div class="card-body p-0">
         <button
           id="agent_blueprints"
@@ -155,7 +175,7 @@
           <span class="bi-dash-square-dotted"></span><span> Unlink</span>
         </button>
       </div>
-    </div>
+    </div> -->
     <!-- </div> -->
   </div>
   <div class="padding"></div>

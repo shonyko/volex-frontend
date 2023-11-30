@@ -11,6 +11,11 @@ import { ActivatedRoute } from '@angular/router';
 import { AgentsService } from 'src/app/services/agents.service';
 import { BlueprintsService } from 'src/app/services/blueprints.service';
 import { ParamsService } from 'src/app/services/params.service';
+import { PinsService } from 'src/app/services/pins.service';
+import { DataType } from 'src/app/models/data-type';
+import { Param } from 'src/app/models/param';
+import { Pin } from 'src/app/models/pin';
+import { PinType } from 'src/app/models/pin-type';
 
 @Component({
   selector: 'app-agent',
@@ -27,8 +32,10 @@ export class AgentComponent implements OnInit {
   private agentsService = inject(AgentsService);
   private blueprintsService = inject(BlueprintsService);
   private paramsService = inject(ParamsService);
+  private pinsService = inject(PinsService);
 
   agentId = signal<number | null>(null);
+
   agent = computed(() => {
     const id = this.agentId();
     if (id == null) {
@@ -37,6 +44,7 @@ export class AgentComponent implements OnInit {
     const agent = this.agentsService.getById(id);
     return agent?.();
   });
+
   blueprint = computed(() => {
     const agent = this.agent();
     if (agent == null) {
@@ -44,12 +52,21 @@ export class AgentComponent implements OnInit {
     }
     return this.blueprintsService.getById(agent.blueprintId)?.();
   });
+
   params = computed(() => {
     const id = this.agentId();
     if (id == null) {
       return [];
     }
     return this.paramsService.params().filter((p) => p().agentId == id);
+  });
+
+  pins = computed(() => {
+    const id = this.agentId();
+    if (id == null) {
+      return [];
+    }
+    return this.pinsService.params().filter((p) => p().agentId == id);
   });
 
   constructor() {}
@@ -61,6 +78,32 @@ export class AgentComponent implements OnInit {
   onBack() {
     this.controlClass = 'inactive';
     setTimeout(this.back.bind(this), 215);
+  }
+
+  getDataTypeName(param: Param) {
+    return DataType[param.dataType].toLowerCase();
+  }
+
+  getPinTypeName(pin: Pin) {
+    return PinType[pin.pinType].toLowerCase() + 'put';
+  }
+
+  isPinConnected(pin: Pin) {
+    return pin.srcPinId != null;
+  }
+
+  getPinConnection(pin: Pin) {
+    if (pin.srcPinId == null) {
+      return 'Disconnected';
+    }
+
+    const src = this.pinsService.getById(pin.srcPinId);
+    if (src() == null) {
+      return 'Source not found';
+    }
+
+    const agent = this.agentsService.getById(src()!.agentId);
+    return `${agent()?.name} / ${src()!.name}`;
   }
 
   ngOnInit() {
