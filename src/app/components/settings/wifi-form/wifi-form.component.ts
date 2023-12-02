@@ -1,16 +1,15 @@
-import { CommonModule } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
+import { ChangeDetectionStrategy } from '@angular/core';
+import { Component, signal, computed, inject, effect } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
-  Component,
-  ViewChild,
-  ElementRef,
-  signal,
-  computed,
-  OnInit,
-  OnDestroy,
-  inject,
-} from '@angular/core';
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { map } from 'rxjs';
 
-import { Subject } from 'rxjs';
 import { WifiCredentialsService } from 'src/app/services/settings/wifi-credentials.service';
 
 @Component({
@@ -18,40 +17,45 @@ import { WifiCredentialsService } from 'src/app/services/settings/wifi-credentia
   selector: 'app-wifi-form',
   templateUrl: './wifi-form.component.html',
   styleUrl: './wifi-form.component.scss',
-  imports: [CommonModule],
+  imports: [ReactiveFormsModule, AsyncPipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class WifiFormComponent implements OnInit, OnDestroy {
-  @ViewChild('pass') passField!: ElementRef;
-  @ViewChild('form') form!: ElementRef;
-
+export class WifiFormComponent {
   private wifiService = inject(WifiCredentialsService);
 
   showPass = signal(false);
   icon = computed(() => (this.showPass() ? 'bi-eye-slash' : 'bi-eye'));
-  newType = computed(() => (this.showPass() ? 'password' : 'text'));
-
-  destroy$ = new Subject<boolean>();
-
-  ngOnInit(): void {
-    this.wifiService.get(this.destroy$).subscribe((credentials) => {
-      console.log(credentials);
-    });
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next(true);
-    this.destroy$.complete();
-  }
+  type = computed(() => (this.showPass() ? 'text' : 'password'));
 
   togglePass() {
-    this.passField.nativeElement.setAttribute('type', this.newType());
     this.showPass.update((val) => !val);
   }
 
-  sendCredentials() {
-    const form = this.form.nativeElement;
-    var formData = new FormData(form);
+  creds = this.wifiService.credentials;
 
-    console.log('settings form', formData);
+  form = new FormGroup({
+    ssid: new FormControl('', {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
+    pass: new FormControl('', {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
+  });
+
+  isInvalid$ = this.form.valueChanges.pipe(
+    takeUntilDestroyed(),
+    map((_) => this.form.invalid)
+  );
+
+  constructor() {
+    effect(() => {
+      this.form.setValue(this.creds());
+    });
+  }
+
+  onSubmit() {
+    this.wifiService.update(this.form.getRawValue());
   }
 }
