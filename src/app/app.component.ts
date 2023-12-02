@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit, inject, OnInit } from '@angular/core';
 import { Tooltip } from 'bootstrap';
 import { SettingsComponent } from './pages/settings/settings.component';
 import { CommonModule } from '@angular/common';
@@ -6,6 +6,7 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AgentsComponent } from './pages/agents/agents.component';
 import { RequestsComponent } from './pages/requests/requests.component';
 import { BlueprintsComponent } from './pages/blueprints/blueprints.component';
+import { ThemeService } from './services/settings/theme.service';
 
 type Tab = {
   title: string;
@@ -21,6 +22,8 @@ type Tab = {
   imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive],
 })
 export class AppComponent implements OnInit, AfterViewInit {
+  private themeService = inject(ThemeService);
+
   activeTab: Tab = {
     title: 'Agents',
     icon: 'bi-columns-gap',
@@ -47,17 +50,11 @@ export class AppComponent implements OnInit, AfterViewInit {
   ];
 
   ngOnInit(): void {
-    this.initTheme();
+    this.themeService.init();
   }
 
   ngAfterViewInit(): void {
     this.initTooltips();
-  }
-
-  private initTheme() {
-    const theme = localStorage.getItem('theme') ?? 'dark';
-    const html = document.querySelector('html') as HTMLHtmlElement;
-    html.setAttribute('data-bs-theme', theme);
   }
 
   private initTooltips(): void {

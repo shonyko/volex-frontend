@@ -1,26 +1,25 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { ThemeService } from 'src/app/services/settings/theme.service';
 
 @Component({
   standalone: true,
   selector: 'app-theme-selector',
   templateUrl: './theme-selector.component.html',
   styleUrl: './theme-selector.component.scss',
+  imports: [ReactiveFormsModule],
 })
-export class ThemeSelectorComponent implements OnInit {
-  htmlContainer!: HTMLHtmlElement;
-  darkMode = signal(false);
+export class ThemeSelectorComponent {
+  private themeService = inject(ThemeService);
 
-  ngOnInit(): void {
-    this.htmlContainer = document.querySelector('html') as HTMLHtmlElement;
-    this.darkMode.update(
-      (_) => this.htmlContainer.getAttribute('data-bs-theme') === 'dark'
-    );
-  }
+  themeCtrl = new FormControl<string>(this.themeService.activeTheme(), {
+    nonNullable: true,
+  });
 
-  toggleDarkMode() {
-    const theme = this.darkMode() ? 'light' : 'dark';
-    this.darkMode.update((val) => !val);
-    this.htmlContainer.setAttribute('data-bs-theme', theme);
-    localStorage.setItem('theme', theme);
+  constructor() {
+    this.themeCtrl.valueChanges.pipe(takeUntilDestroyed()).subscribe((val) => {
+      this.themeService.set(val);
+    });
   }
 }

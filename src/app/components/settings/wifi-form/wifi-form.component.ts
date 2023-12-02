@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 
 import { Subject } from 'rxjs';
-import { WifiCredentialsService } from 'src/app/services/wifi-credentials.service';
+import { WifiCredentialsService } from 'src/app/services/settings/wifi-credentials.service';
 
 @Component({
   standalone: true,

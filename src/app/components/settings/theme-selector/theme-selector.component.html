@@ -3,18 +3,40 @@
     <span class="pl-1 align-middle">Theme</span>
   </h5>
 
-  <form class="container-fluid">
-    <div class="d-flex justify-content-between">
-      <label class="form-check-label" for="darkModeChecked"> Dark Mode </label>
-      <div class="form-switch form-check">
-        <input
-          class="form-check-input"
-          type="checkbox"
-          id="darkModeChecked"
-          [attr.checked]="darkMode() ? 'checked' : null"
-          (change)="toggleDarkMode()"
-        />
-      </div>
+  <form class="container-fluid d-flex justify-content-center">
+    <div class="btn-group" role="group" aria-label="Theme selector">
+      <input
+        type="radio"
+        class="btn-check"
+        name="btnradio"
+        id="btnradio1"
+        autocomplete="off"
+        value="system"
+        [formControl]="themeCtrl"
+      />
+      <label class="btn btn-outline-secondary" for="btnradio1">System</label>
+
+      <input
+        type="radio"
+        class="btn-check"
+        name="btnradio"
+        id="btnradio2"
+        autocomplete="off"
+        value="light"
+        [formControl]="themeCtrl"
+      />
+      <label class="btn btn-outline-secondary" for="btnradio2">Light</label>
+
+      <input
+        type="radio"
+        class="btn-check"
+        name="btnradio"
+        id="btnradio3"
+        autocomplete="off"
+        value="dark"
+        [formControl]="themeCtrl"
+      />
+      <label class="btn btn-outline-secondary" for="btnradio3">Dark</label>
     </div>
   </form>
 </div>
