@@ -26,7 +26,37 @@ export class PinsService extends BaseService<Pin> {
       });
   }
 
-  get params() {
+  get pins() {
     return this.readOnlyList;
+  }
+
+  disconnect(id: number) {
+    // TODO: send to backend
+    this.getWritableById(id)?.update((p) => {
+      return {
+        ...p,
+        srcPinId: null,
+      };
+    });
+  }
+
+  connect(dstId: number, srcId: number) {
+    this.getWritableById(dstId)?.update((p) => {
+      return {
+        ...p,
+        srcPinId: srcId,
+      };
+    });
+  }
+
+  update(id: number, value: string) {
+    //TODO: send it to the backend
+    console.log(value);
+    this.getWritableById(id)?.update((p) => {
+      return {
+        ...p,
+        value,
+      };
+    });
   }
 }

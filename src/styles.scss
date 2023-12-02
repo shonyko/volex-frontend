@@ -25,3 +25,12 @@ html {
 html[data-bs-theme="dark"] {
   --hover-brightness: 145%;
 }
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}

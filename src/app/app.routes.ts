@@ -4,6 +4,7 @@ import { AgentsComponent } from './pages/agents/agents.component';
 import { RequestsComponent } from './pages/requests/requests.component';
 import { BlueprintsComponent } from './pages/blueprints/blueprints.component';
 import { AgentComponent } from './pages/agent/agent.component';
+import { PinComponent } from './pages/pin/pin.component';
 
 export const routes: Routes = [
   {
@@ -13,6 +14,10 @@ export const routes: Routes = [
       {
         path: ':id',
         component: AgentComponent,
+      },
+      {
+        path: ':agentId/pins/:id',
+        component: PinComponent,
       },
     ],
   },

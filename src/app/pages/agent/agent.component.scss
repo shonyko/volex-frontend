@@ -12,3 +12,18 @@
 .content {
   gap: 0.5rem;
 }
+
+.pin.card {
+  cursor: pointer;
+
+  * {
+    pointer-events: none;
+  }
+
+  transition: filter 150ms;
+
+  &:hover {
+    filter: brightness(var(--hover-brightness));
+    // filter: contrast(87%);
+  }
+}

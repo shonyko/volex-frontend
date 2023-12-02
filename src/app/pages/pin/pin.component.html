@@ -1,0 +1,205 @@
+<h2 class="mb-0 d-flex">
+  <button type="button" class="btn btn-sm py-0" routerLink="../..">
+    <span class="bi-box-arrow-left fs-2"></span>
+  </button>
+
+  <span class="align-middle flex-grow-1 py-1">{{ pin()?.name }}</span>
+</h2>
+<hr class="mt-1 mb-2" />
+
+<div
+  class="px-0 d-flex flex-column flex-sm-row flex-xl-row flex-lg-row flex-md-row"
+>
+  <div class="padding"></div>
+  <div class="content">
+    <div class="card m-1 p-0 bg-primary-subtle app-card-min-width">
+      <div class="card-body p-0">
+        <form class="container-fluid d-flex flex-column" style="gap: 0.5rem">
+          <h5 class="card-title pb-1 text-primary">Info</h5>
+
+          <div class="row mb-0">
+            <label class="col-4 col-form-label py-1">Type</label>
+            <div class="col-8">
+              <input
+                type="text"
+                readonly
+                class="form-control-plaintext py-1"
+                [value]="typeName()"
+              />
+            </div>
+          </div>
+
+          <div class="row mb-0">
+            <label class="col-4 col-form-label py-1">Data Type</label>
+            <div class="col-8">
+              <input
+                type="text"
+                readonly
+                class="form-control-plaintext py-1"
+                [value]="dataType()"
+              />
+            </div>
+          </div>
+
+          @if (isInput()) {
+          <div class="row mb-1 align-items-center">
+            <label class="col-4 col-form-label py-1">Source</label>
+            <!-- <div class="col-8"> -->
+            <mat-form-field class="col-8">
+              <mat-select
+                [formControl]="sourcePinCtrl"
+                placeholder="Disconnected"
+                #singleSelect
+              >
+                <mat-option>
+                  <ngx-mat-select-search
+                    [formControl]="pinsFilterCtrl"
+                    placeholderLabel="Search..."
+                    noEntriesFoundLabel="No pins found"
+                  />
+                </mat-option>
+                @for (group of filteredPinGroups(); track group.agent.id) {
+                <mat-optgroup [label]="group.agent.name">
+                  @for(pin of group.pins; track pin.id) {
+                  <mat-option [value]="pin">
+                    {{ pin.name }}
+                  </mat-option>
+                  }
+                </mat-optgroup>
+                }
+              </mat-select>
+            </mat-form-field>
+            <!-- </div> -->
+          </div>
+
+          <div class="row my-1">
+            <div class="col-12 text-center px-2 pb-2">
+              <button
+                type="button"
+                class="btn btn-sm btn-danger px-1 unset"
+                (click)="disconnect(pin()!)"
+                [attr.disabled]="sourcePinId() ? null : true"
+              >
+                <span class="bi-x-square"></span><span> Unset</span>
+              </button>
+            </div>
+          </div>
+          }
+        </form>
+      </div>
+    </div>
+
+    @if(isInput()) {
+    <h5 class="mb-1 px-1 text-primary pt-3">Manual Control</h5>
+
+    <div class="card m-1 app-card-min-width">
+      <div class="card-body p-2">
+        <div class="row mb-0">
+          @switch (pin()?.dataType) { @case (dataTypes.BOOLEAN) {
+          <label class="col-4 col-form-label py-1 text-nowrap">Switch</label>
+          <div class="col-8 form-check form-switch">
+            <input
+              #in
+              type="checkbox"
+              class="form-check-input py-1"
+              [attr.checked]="pin()?.value === 'true' ? 'checked' : null"
+              (input)="onValueChange(in.value)"
+            />
+          </div>
+          } @case (dataTypes.INTEGER) {
+          <label class="col-4 col-form-label py-1">Range</label>
+          <div class="col-8">
+            <input
+              #in
+              type="range"
+              class="my-range py-1"
+              min="0"
+              max="100"
+              [value]="pin()?.value"
+              (input)="onValueChange(in.value)"
+            />
+          </div>
+          } @case (dataTypes.RGB) {
+          <label class="col-4 col-form-label py-1 text-nowrap">
+            Color Picker
+          </label>
+          <div class="col-8">
+            <input
+              #in
+              type="color"
+              class="form-control-color py-1"
+              [value]="pin()?.value"
+              title="Choose your color"
+              (input)="onValueChange(in.value)"
+            />
+          </div>
+          } @default {
+          <label class="col-12 col-form-label py-1 text-nowrap">Textarea</label>
+          <div class="col-12">
+            <textarea
+              #in
+              rows="3"
+              class="form-control py-1"
+              (input)="onValueChange(in.value)"
+            ></textarea>
+          </div>
+          } }
+        </div>
+      </div>
+    </div>
+    } @else {
+    <h5 class="mb-1 px-1 text-primary pt-3">Connected pins</h5>
+
+    @for (pin of connectedPins(); track pin().id) {
+    <div class="card m-1 p-0 bg-success-subtle app-card-min-width">
+      <div class="card-body p-0">
+        <form class="container-fluid">
+          <div class="row mb-0">
+            <label class="col-4 col-form-label py-1">Agent</label>
+            <div class="col-8">
+              <input
+                type="text"
+                readonly
+                class="form-control-plaintext py-1"
+                [value]="getConnectedAgent(pin())?.name ?? 'Not connected'"
+              />
+            </div>
+          </div>
+          <div class="row mb-0">
+            <label class="col-4 col-form-label py-1">Pin</label>
+            <div class="col-8">
+              <input
+                type="text"
+                readonly
+                class="form-control-plaintext py-1"
+                [value]="pin().name"
+              />
+            </div>
+          </div>
+          <div class="row mb-0">
+            <div class="col-12 text-center px-2 pb-2">
+              <button
+                type="button"
+                class="btn btn-sm btn-danger px-1"
+                (click)="disconnect(pin())"
+              >
+                <span class="bi-x-square"></span><span> Disconect</span>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    } @empty {
+    <div class="empty">No connected pins</div>
+    } }
+  </div>
+  <div class="padding"></div>
+</div>
+
+<!-- <div
+  class="px-0 d-flex flex-column flex-sm-row flex-xl-row flex-lg-row flex-md-row"
+  id="pinList"
+> -->
+
+<!-- </div> -->

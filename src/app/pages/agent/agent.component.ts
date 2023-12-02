@@ -10,24 +10,7 @@ import { PinType } from 'src/app/models/pin-type';
 import { AgentParamComponent } from '../../components/agents/agent-param/agent-param.component';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { EMPTY, filter, map, of, switchMap } from 'rxjs';
-import { Result } from 'src/app/models/state';
-
-function parseId(str: string | null): Result<number, string> {
-  if (str == null) {
-    return {
-      err: 'no id found',
-    };
-  }
-  const id = Number(str);
-  if (id == null || isNaN(id)) {
-    return {
-      err: 'invalid id',
-    };
-  }
-  return {
-    val: id,
-  };
-}
+import { parseId } from 'src/app/utils/parsers';
 
 @Component({
   selector: 'app-agent',
@@ -84,7 +67,7 @@ export class AgentComponent {
 
   pins = computed(() => {
     const id = this.agentId();
-    return this.pinsService.params().filter((p) => p().agentId == id);
+    return this.pinsService.pins().filter((p) => p().agentId == id);
   });
 
   getPinTypeName(pin: Pin) {
@@ -92,10 +75,17 @@ export class AgentComponent {
   }
 
   isPinConnected(pin: Pin) {
-    return pin.srcPinId != null;
+    return pin.pinType == PinType.OUT || pin.srcPinId != null;
   }
 
   getPinConnection(pin: Pin) {
+    if (pin.pinType == PinType.OUT) {
+      const connections = this.pinsService
+        .pins()
+        .filter((p) => p().srcPinId == pin.id).length;
+      return `to ${connections} pins`;
+    }
+
     if (pin.srcPinId == null) {
       return 'Disconnected';
     }
@@ -107,5 +97,9 @@ export class AgentComponent {
 
     const agent = this.agentsService.getById(src()!.agentId);
     return `${agent()?.name} / ${src()!.name}`;
+  }
+
+  getPinPath(pin: Pin) {
+    return `pins/${pin.id}`;
   }
 }

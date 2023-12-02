@@ -10,8 +10,7 @@ export class BaseService<T extends HasId> {
 
   private addToList(sig: WritableSignal<T>) {
     this.itemList.update((l) => {
-      l.push(sig as WritableSignal<T>);
-      return l;
+      return [...l, sig];
     });
   }
 

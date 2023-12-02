@@ -41,8 +41,10 @@ export class ParamsService extends BaseService<Param> {
     var signal = this.getWritableById(id);
     if (signal != null) {
       signal.update((p) => {
-        p.value = value;
-        return p;
+        return {
+          ...p,
+          value,
+        };
       });
     }
   }
