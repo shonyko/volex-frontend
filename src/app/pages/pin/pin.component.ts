@@ -104,6 +104,20 @@ export class PinComponent {
     return this.pinsService.getById(srcId)?.();
   });
 
+  sourcePinLabel = computed(() => {
+    const src = this.sourcePin();
+    if (src == null) {
+      return null;
+    }
+
+    const agent = this.agentsService.getById(src.agentId)();
+    if (agent == null) {
+      return null;
+    }
+
+    return agent.name;
+  });
+
   sourcePinEffect = effect(() => {
     this.sourcePinCtrl.setValue(this.sourcePin(), { emitEvent: false });
   });
