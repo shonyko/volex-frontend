@@ -1,47 +1,57 @@
-import { Component, Input, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, Input, inject, signal } from '@angular/core';
 import { Param } from 'src/app/models/param';
 import { DataType } from 'src/app/models/data-type';
-import { Subject, debounceTime } from 'rxjs';
+import { debounceTime } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ParamsService } from 'src/app/services/params.service';
+import { ChangeDetectionStrategy } from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { hexToRgb, parseParamValue } from 'src/app/utils/parsers';
 
 @Component({
   selector: 'app-agent-param',
   standalone: true,
-  imports: [CommonModule],
+  imports: [ReactiveFormsModule],
   templateUrl: './agent-param.component.html',
   styleUrl: './agent-param.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AgentParamComponent {
-  @Input({ alias: 'param', required: true }) param!: Param;
+  @Input({ alias: 'param', required: true }) set param_value(p: Param) {
+    this.param.set(p);
+    this.valueCtrl.setValue(parseParamValue(p), {
+      emitEvent: false,
+    });
+  }
 
   private paramsService = inject(ParamsService);
 
-  private update$ = new Subject<string>();
+  valueCtrl = new FormControl<any>({ value: null, disabled: false });
+
+  param = signal<Param | null>(null);
 
   dataTypes = DataType;
 
   constructor() {
-    this.update$
+    this.valueCtrl.valueChanges
       .pipe(takeUntilDestroyed(), debounceTime(200))
       .subscribe((val) => {
-        this.paramsService.update(this.param.id, val);
+        const param = this.param();
+        if (param == null) {
+          return;
+        }
+        if (param.dataType == DataType.RGB) {
+          val = hexToRgb(val);
+        }
+        this.paramsService.update(param.id, val);
       });
   }
 
-  getDataTypeName(param: Param) {
-    return DataType[param.dataType].toLowerCase();
-  }
-
-  // private toRGB(hex: any) {
-  //   if (this.param.dataType != DataType.RGB) {
-  //     return hex;
-  //   }
-  //   return hex;
-  // }
-
-  onChange(value: any) {
-    this.update$.next(value);
+  getDataTypeName() {
+    const type = this.param()?.dataType;
+    if (type == null) {
+      return '';
+    }
+    return DataType[type].toLowerCase();
   }
 }

@@ -2,7 +2,7 @@
   <h5
     class="mb-1 ms-2 ps-1 pe-0 text-primary d-flex justify-content-between py-1"
   >
-    <span class="pl-1 align-middle">{{ param.name }}</span>
+    <span class="pl-1 align-middle">{{ param()?.name }}</span>
     <!-- <button type="button" class="btn btn-sm text-primary py-0 pr-1">
       <span class="bi-arrow-right-square fs-6"></span>
     </button> -->
@@ -24,51 +24,43 @@
           type="text"
           readonly
           class="form-control-plaintext py-1"
-          [value]="getDataTypeName(param)"
+          [value]="getDataTypeName()"
         />
       </div>
     </div>
 
     <div class="row mb-0">
       <label class="col-4 col-form-label py-1">Value</label>
-      @switch (param.dataType) { @case (dataTypes.BOOLEAN) {
+      @switch (param()?.dataType) { @case (dataTypes.BOOLEAN) {
       <div class="col-8 form-check form-switch px-5">
         <input
-          #toggle
           type="checkbox"
           class="form-check-input py-1"
-          [attr.checked]="param.value === 'true' ? 'checked' : null"
-          (input)="onChange(toggle.checked)"
+          [formControl]="valueCtrl"
         />
       </div>
       } @case(dataTypes.INTEGER) {
       <div class="col-8">
         <input
-          #nb_input
           type="number"
           class="form-control-plaintext py-1"
-          [value]="param.value"
-          (input)="onChange(nb_input.value)"
+          [formControl]="valueCtrl"
         />
       </div>
       } @case(dataTypes.RGB) {
       <div class="col-8">
         <input
-          #color_picker
           type="color"
           class="form-control-color py-1"
-          [value]="param.value"
-          (input)="onChange(color_picker.value)"
+          [formControl]="valueCtrl"
         />
       </div>
       }@default {
       <div class="col-8">
         <textarea
-          #text_input
           type="text"
           class="form-control-plaintext py-1"
-          [value]="param.value"
-          (input)="onChange(text_input.value)"
+          [formControl]="valueCtrl"
         ></textarea>
       </div>
       } }

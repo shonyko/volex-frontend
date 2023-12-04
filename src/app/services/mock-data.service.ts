@@ -164,7 +164,7 @@ const params: Param[] = [
     name: 'Color',
     blueprintId: SWITCH_BLUEPRINT.id,
     dataType: DataType.RGB,
-    value: '#ff00a2',
+    value: '[255, 0, 162]',
     agentId: SWITCH_AGENT.id,
   },
   {

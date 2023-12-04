@@ -3,20 +3,21 @@ import { BaseService } from './base-service';
 import { Param } from '../models/param';
 import { MockDataService } from './mock-data.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { HttpClient } from '@angular/common/http';
+import { useMockData } from '../utils/config';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ParamsService extends BaseService<Param> {
+  private http = inject(HttpClient);
   private mockData = inject(MockDataService);
 
   public loaded = signal(false);
 
   constructor() {
     super();
-
-    this.mockData
-      .getParams()
+    this.getData()
       .pipe(takeUntilDestroyed())
       .subscribe((data) => {
         for (let item of data) {
@@ -24,29 +25,41 @@ export class ParamsService extends BaseService<Param> {
         }
         this.loaded.set(true);
       });
+  }
 
-    // simulate websocket update
-    // setTimeout(() => {
-    //   this.itemList()[0].update((p) => {
-    //     console.log(p);
-    //     p.value = 'false';
-    //     return p;
-    //   });
-    // }, 5000);
+  private getMockData() {
+    return this.mockData.getParams();
+  }
+
+  private getServerData() {
+    return this.http.get<Param[]>(`/api/params`);
+  }
+
+  private getData() {
+    return useMockData() ? this.getMockData() : this.getServerData();
   }
 
   update(id: number, value: string) {
-    //TODO: send it to the backend
-    console.log(value);
     var signal = this.getWritableById(id);
-    if (signal != null) {
-      signal.update((p) => {
-        return {
-          ...p,
-          value,
-        };
-      });
-    }
+    this.http.post(`/api/params/${id}/value`, value).subscribe({
+      next() {
+        signal?.update((p) => {
+          return {
+            ...p,
+            value,
+          };
+        });
+      },
+      // TODO: maybe show a popup
+      error(err) {
+        console.log('error while updating param value: ', err);
+        signal?.update((p) => {
+          return {
+            ...p,
+          };
+        });
+      },
+    });
   }
 
   get params() {
