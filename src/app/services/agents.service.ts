@@ -4,6 +4,7 @@ import { Agent } from '../models/agent';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MockDataService } from './mock-data.service';
 import { BaseService } from './base-service';
+import { useMockData } from '../utils/config';
 
 @Injectable({
   providedIn: 'root',
@@ -16,17 +17,7 @@ export class AgentsService extends BaseService<Agent> {
 
   constructor() {
     super();
-    // this.http
-    //   .get<AgentDto[]>('test')
-    //   .pipe(takeUntilDestroyed())
-    //   .subscribe((agents) => {});
-    // effect(
-    //   () => {
-    //     if (!this.blueprintService.loaded()) {
-    //       return;
-    //     }
-    this.mockData
-      .getAgents()
+    this.getData()
       .pipe(takeUntilDestroyed())
       .subscribe((data) => {
         for (let item of data) {
@@ -34,17 +25,21 @@ export class AgentsService extends BaseService<Agent> {
         }
         this.loaded.set(true);
       });
-    //   },
-    //   {
-    //     allowSignalWrites: true,
-    //   }
-    // );
+  }
+
+  private getMockData() {
+    return this.mockData.getAgents();
+  }
+
+  private getServerData() {
+    return this.http.get<Agent[]>(`/api/agents`);
+  }
+
+  private getData() {
+    return useMockData() ? this.getMockData() : this.getServerData();
   }
 
   get agents() {
-    // if (!this.loaded) {
-    //   this.http.get('');
-    // }
     return this.readOnlyList;
   }
 }

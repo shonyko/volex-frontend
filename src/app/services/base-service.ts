@@ -14,7 +14,7 @@ export class BaseService<T extends HasId> {
     });
   }
 
-  updateItem(item: T) {
+  protected updateItem(item: T) {
     let s = this.itemMap.get(item.id);
     if (s == null) {
       s = signal(null);
