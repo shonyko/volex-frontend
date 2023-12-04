@@ -3,20 +3,21 @@ import { BaseService } from './base-service';
 import { Pin } from '../models/pin';
 import { MockDataService } from './mock-data.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { useMockData } from '../utils/config';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PinsService extends BaseService<Pin> {
+  private http = inject(HttpClient);
   private mockData = inject(MockDataService);
 
   public loaded = signal(false);
 
   constructor() {
     super();
-
-    this.mockData
-      .getPins()
+    this.getData()
       .pipe(takeUntilDestroyed())
       .subscribe((data) => {
         for (let item of data) {
@@ -24,6 +25,18 @@ export class PinsService extends BaseService<Pin> {
         }
         this.loaded.set(true);
       });
+  }
+
+  private getMockData() {
+    return this.mockData.getPins();
+  }
+
+  private getServerData() {
+    return this.http.get<Pin[]>(`/api/pins`);
+  }
+
+  private getData() {
+    return useMockData() ? this.getMockData() : this.getServerData();
   }
 
   get pins() {

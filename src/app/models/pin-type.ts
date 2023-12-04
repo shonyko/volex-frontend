@@ -1,4 +1,4 @@
 export enum PinType {
-  IN,
-  OUT,
+  IN = 'IN',
+  OUT = 'OUT',
 }

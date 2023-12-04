@@ -1,6 +1,6 @@
 export enum DataType {
-  BOOLEAN,
-  INTEGER,
-  JSON,
-  RGB,
+  BOOLEAN = 'BOOLEAN',
+  INTEGER = 'INTEGER',
+  JSON = 'JSON',
+  RGB = 'RGB',
 }
