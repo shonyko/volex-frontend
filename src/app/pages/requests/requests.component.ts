@@ -17,4 +17,16 @@ export class RequestsComponent {
   blueprintsService = inject(BlueprintsService);
 
   requests = this.requestsService.pairRequests;
+
+  allow(id: number) {
+    // TODO: maybe add loading animation
+    this.requestsService.allow(id).subscribe({
+      next() {
+        console.log('success');
+      },
+      error(err) {
+        console.log('error while allowing request ', err);
+      },
+    });
+  }
 }

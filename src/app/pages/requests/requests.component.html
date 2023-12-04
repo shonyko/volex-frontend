@@ -60,7 +60,11 @@
             <div
               class="col-4 d-flex justify-content-between align-content-center flex-wrap px-2"
             >
-              <button type="button" class="btn btn-sm btn-success w-100 px-0">
+              <button
+                type="button"
+                class="btn btn-sm btn-success w-100 px-0"
+                (click)="allow(request().id)"
+              >
                 <span class="bi-check2-square"></span><span> Allow</span>
               </button>
             </div>

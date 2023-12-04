@@ -4,6 +4,8 @@ import { PairRequest } from '../models/pair-request';
 import { MockDataService } from './mock-data.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BaseService } from './base-service';
+import { useMockData } from '../utils/config';
+import { tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -16,17 +18,7 @@ export class PairRequestsService extends BaseService<PairRequest> {
 
   constructor() {
     super();
-    // this.http
-    //   .get<AgentDto[]>('test')
-    //   .pipe(takeUntilDestroyed())
-    //   .subscribe((agents) => {});
-    // effect(
-    //   () => {
-    //     if (!this.blueprintService.loaded()) {
-    //       return;
-    //     }
-    this.mockData
-      .getRequests()
+    this.getData()
       .pipe(takeUntilDestroyed())
       .subscribe((data) => {
         for (let item of data) {
@@ -34,17 +26,31 @@ export class PairRequestsService extends BaseService<PairRequest> {
         }
         this.loaded.set(true);
       });
-    //   },
-    //   {
-    //     allowSignalWrites: true,
-    //   }
-    // );
+  }
+
+  private getMockData() {
+    return this.mockData.getRequests();
+  }
+
+  private getServerData() {
+    return this.http.get<PairRequest[]>(`/api/requests`);
+  }
+
+  private getData() {
+    return useMockData() ? this.getMockData() : this.getServerData();
   }
 
   get pairRequests() {
-    // if (!this.loaded) {
-    //   this.http.get('');
-    // }
     return this.readOnlyList;
+  }
+
+  allow(id: number) {
+    return this.http.post(`/api/requests/${id}/accept`, null).pipe(
+      tap(() => {
+        // TODO: maybe remove this after adding websockets
+        this.itemMap.delete(id);
+        this.itemList.update((l) => l.filter((x) => x().id != id));
+      })
+    );
   }
 }
