@@ -102,24 +102,20 @@
           <label class="col-4 col-form-label py-1 text-nowrap">Switch</label>
           <div class="col-8 form-check form-switch">
             <input
-              #in
               type="checkbox"
               class="form-check-input py-1"
-              [attr.checked]="pin()?.value === 'true' ? 'checked' : null"
-              (input)="onValueChange(in.value)"
+              [formControl]="manualValueCtrl"
             />
           </div>
           } @case (dataTypes.INTEGER) {
           <label class="col-4 col-form-label py-1">Range</label>
           <div class="col-8">
             <input
-              #in
               type="range"
               class="my-range py-1"
               min="0"
               max="100"
-              [value]="pin()?.value"
-              (input)="onValueChange(in.value)"
+              [formControl]="manualValueCtrl"
             />
           </div>
           } @case (dataTypes.RGB) {
@@ -128,22 +124,19 @@
           </label>
           <div class="col-8">
             <input
-              #in
               type="color"
               class="form-control-color py-1"
-              [value]="pin()?.value"
               title="Choose your color"
-              (input)="onValueChange(in.value)"
+              [formControl]="manualValueCtrl"
             />
           </div>
           } @default {
           <label class="col-12 col-form-label py-1 text-nowrap">Textarea</label>
           <div class="col-12">
             <textarea
-              #in
               rows="3"
               class="form-control py-1"
-              (input)="onValueChange(in.value)"
+              [formControl]="manualValueCtrl"
             ></textarea>
           </div>
           } }

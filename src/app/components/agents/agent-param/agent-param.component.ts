@@ -6,7 +6,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ParamsService } from 'src/app/services/params.service';
 import { ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { hexToRgb, parseParamValue } from 'src/app/utils/parsers';
+import { hexToRgb, parseValue } from 'src/app/utils/parsers';
 
 @Component({
   selector: 'app-agent-param',
@@ -19,7 +19,7 @@ import { hexToRgb, parseParamValue } from 'src/app/utils/parsers';
 export class AgentParamComponent {
   @Input({ alias: 'param', required: true }) set param_value(p: Param) {
     this.param.set(p);
-    this.valueCtrl.setValue(parseParamValue(p), {
+    this.valueCtrl.setValue(parseValue(p), {
       emitEvent: false,
     });
   }

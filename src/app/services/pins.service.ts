@@ -5,6 +5,7 @@ import { MockDataService } from './mock-data.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { useMockData } from '../utils/config';
 import { HttpClient } from '@angular/common/http';
+import { tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -44,32 +45,52 @@ export class PinsService extends BaseService<Pin> {
   }
 
   disconnect(id: number) {
-    // TODO: send to backend
-    this.getWritableById(id)?.update((p) => {
-      return {
-        ...p,
-        srcPinId: null,
-      };
-    });
+    return this.http.delete(`/api/pins/${id}/src`).pipe(
+      tap((_) => {
+        this.getWritableById(id)?.update((p) => {
+          return {
+            ...p,
+            srcPinId: null,
+          };
+        });
+      })
+    );
   }
 
   connect(dstId: number, srcId: number) {
-    this.getWritableById(dstId)?.update((p) => {
-      return {
-        ...p,
-        srcPinId: srcId,
-      };
-    });
+    return this.http.post(`/api/pins/${dstId}/src`, srcId).pipe(
+      tap((_) => {
+        this.getWritableById(dstId)?.update((p) => {
+          return {
+            ...p,
+            srcPinId: srcId,
+          };
+        });
+      })
+    );
   }
 
   update(id: number, value: string) {
-    //TODO: send it to the backend
-    console.log(value);
-    this.getWritableById(id)?.update((p) => {
-      return {
-        ...p,
-        value,
-      };
+    const signal = this.getWritableById(id);
+    this.http.post(`/api/pins/${id}/value`, value).subscribe({
+      next() {
+        signal?.update((p) => {
+          return {
+            ...p,
+            value,
+          };
+        });
+      },
+      // TODO: maybe show a popup
+      error(err) {
+        console.log('error while updating pin value: ', err);
+        signal?.update((p) => {
+          return {
+            ...p,
+            value,
+          };
+        });
+      },
     });
   }
 }

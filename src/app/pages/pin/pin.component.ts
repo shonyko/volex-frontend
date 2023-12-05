@@ -2,8 +2,8 @@ import { Component, computed, effect, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { EMPTY, Subject, debounceTime, filter, map, of, switchMap } from 'rxjs';
-import { parseId } from 'src/app/utils/parsers';
+import { EMPTY, debounceTime, filter, map, of, switchMap } from 'rxjs';
+import { hexToRgb, parseId, parseValue } from 'src/app/utils/parsers';
 import { PinsService } from 'src/app/services/pins.service';
 import { Pin } from 'src/app/models/pin';
 import { PinType } from 'src/app/models/pin-type';
@@ -92,7 +92,15 @@ export class PinComponent {
   }
 
   disconnect(pin: Pin) {
-    this.pinsService.disconnect(pin.id);
+    // TODO: maybe add loading animation
+    this.pinsService.disconnect(pin.id).subscribe({
+      next() {
+        console.log('success');
+      },
+      error(err) {
+        console.log('error while unsetting source: ', err);
+      },
+    });
   }
 
   sourcePinId = computed(() => this.pin()?.srcPinId);
@@ -136,7 +144,14 @@ export class PinComponent {
         return;
       }
 
-      this.pinsService.connect(pinId, src.id);
+      this.pinsService.connect(pinId, src.id).subscribe({
+        next() {
+          console.log('success');
+        },
+        error(err) {
+          console.log('error while setting source: ', err);
+        },
+      });
     });
 
   pinsFilterCtrl: FormControl<string> = new FormControl<string>('', {
@@ -183,18 +198,25 @@ export class PinComponent {
     });
   });
 
-  private valueUpdate$ = new Subject<string>();
-  onValueChanged = this.valueUpdate$
+  pinValueEffect = effect(() => {
+    const pin = this.pin();
+    if (pin == null) {
+      return;
+    }
+    this.manualValueCtrl.setValue(parseValue(pin), { emitEvent: false });
+  });
+
+  manualValueCtrl = new FormControl<any>({ value: null, disabled: false });
+  onValueChanged = this.manualValueCtrl.valueChanges
     .pipe(takeUntilDestroyed(), debounceTime(200))
     .subscribe((val) => {
-      const id = this.pin()?.id;
-      if (id == null) {
+      const pin = this.pin();
+      if (pin == null) {
         return;
       }
-      this.pinsService.update(id, val);
+      if (pin.dataType == DataType.RGB) {
+        val = hexToRgb(val);
+      }
+      this.pinsService.update(pin.id, val);
     });
-
-  onValueChange(value: any) {
-    this.valueUpdate$.next(value);
-  }
 }

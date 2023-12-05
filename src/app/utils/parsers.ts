@@ -1,5 +1,4 @@
 import { DataType } from '../models/data-type';
-import { Param } from '../models/param';
 import { Result } from '../models/state';
 
 export function parseId(str: string | null): Result<number, string> {
@@ -38,20 +37,20 @@ export function hexToRgb(hex: string) {
   return result?.slice(1).map((x) => parseInt(x, 16));
 }
 
-export function parseParamValue(pin: Param) {
-  switch (pin.dataType) {
+export function parseValue(obj: { dataType: DataType; value: string }) {
+  switch (obj.dataType) {
     case DataType.BOOLEAN: {
-      return /^true$/i.test(pin.value);
+      return /^true$/i.test(obj.value);
     }
     case DataType.INTEGER: {
-      return parseInt(pin.value);
+      return parseInt(obj.value);
     }
     case DataType.RGB: {
-      const rgb = JSON.parse(pin.value);
+      const rgb = JSON.parse(obj.value);
       return rgbToHex(rgb[0], rgb[1], rgb[2]);
     }
     default: {
-      return pin.value;
+      return obj.value;
     }
   }
 }
