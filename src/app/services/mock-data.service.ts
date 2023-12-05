@@ -7,6 +7,7 @@ import { Param } from '../models/param';
 import { DataType } from '../models/data-type';
 import { Pin } from '../models/pin';
 import { PinType } from '../models/pin-type';
+import { WifiCredentials } from '../models/wifi-credentials';
 
 function getIdGenerator() {
   let id = 1;
@@ -236,5 +237,12 @@ export class MockDataService {
 
   getPins() {
     return of(pins);
+  }
+
+  getCredentials() {
+    return of<WifiCredentials>({
+      ssid: 'test_ssid',
+      pass: 'test_pass',
+    });
   }
 }

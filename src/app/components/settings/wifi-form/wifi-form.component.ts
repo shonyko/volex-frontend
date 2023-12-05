@@ -44,9 +44,9 @@ export class WifiFormComponent {
     }),
   });
 
-  isInvalid$ = this.form.valueChanges.pipe(
+  isDisabled$ = this.form.valueChanges.pipe(
     takeUntilDestroyed(),
-    map((_) => this.form.invalid)
+    map((_) => this.form.invalid || this.form.pristine)
   );
 
   constructor() {
@@ -56,6 +56,13 @@ export class WifiFormComponent {
   }
 
   onSubmit() {
-    this.wifiService.update(this.form.getRawValue());
+    // TODO: maybe add loading animation
+    this.wifiService.update(this.form.getRawValue()).subscribe({
+      next: () => {
+        this.form.markAsPristine();
+        console.log('success');
+      },
+      error() {},
+    });
   }
 }
