@@ -6,6 +6,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { useMockData } from '../utils/config';
 import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs';
+import { WebsocketService } from './websocket.service';
+import { Events } from '../utils/constants';
 
 @Injectable({
   providedIn: 'root',
@@ -13,6 +15,7 @@ import { tap } from 'rxjs';
 export class PinsService extends BaseService<Pin> {
   private http = inject(HttpClient);
   private mockData = inject(MockDataService);
+  private websocket = inject(WebsocketService);
 
   public loaded = signal(false);
 
@@ -26,6 +29,36 @@ export class PinsService extends BaseService<Pin> {
         }
         this.loaded.set(true);
       });
+    this.websocket.on(Events.PIN_VALUE, ({ id, value }) => {
+      // const change = JSON.parse(args) as { id: number; value: string };
+      const pin = this.getWritableById(Number(id));
+      if (pin == null) {
+        return;
+      }
+      pin.update((p) => ({
+        ...p,
+        value: value,
+      }));
+    });
+    this.websocket.on(Events.PIN_SOURCE, ({ id, src, value }) => {
+      // const change = JSON.parse(args) as {
+      //   id: number;
+      //   src: number;
+      //   value: string;
+      // };
+      const pin = this.getWritableById(Number(id));
+      if (pin == null) {
+        return;
+      }
+      pin.update((p) => ({
+        ...p,
+        srcPinId: src,
+        value: value,
+      }));
+    });
+    this.websocket.on(Events.NEW_PIN, (p: Pin) => {
+      this.updateItem(p);
+    });
   }
 
   private getMockData() {

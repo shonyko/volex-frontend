@@ -6,6 +6,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BaseService } from './base-service';
 import { useMockData } from '../utils/config';
 import { tap } from 'rxjs';
+import { WebsocketService } from './websocket.service';
+import { Events } from '../utils/constants';
 
 @Injectable({
   providedIn: 'root',
@@ -13,6 +15,7 @@ import { tap } from 'rxjs';
 export class PairRequestsService extends BaseService<PairRequest> {
   private http = inject(HttpClient);
   private mockData = inject(MockDataService);
+  private websocket = inject(WebsocketService);
 
   public loaded = signal(false);
 
@@ -26,6 +29,15 @@ export class PairRequestsService extends BaseService<PairRequest> {
         }
         this.loaded.set(true);
       });
+    this.websocket.on(Events.NEW_PAIR_REQUEST, (pr: PairRequest) => {
+      // const pr = JSON.parse(args) as PairRequest;
+      this.updateItem(pr);
+    });
+    this.websocket.on(Events.DEL_PAIR_REQUEST, (id: number) => {
+      // const id = args as number;
+      this.itemList.update((l) => l.filter((pr) => pr().id != id));
+      this.itemMap.delete(id);
+    });
   }
 
   private getMockData() {

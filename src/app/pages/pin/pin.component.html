@@ -64,7 +64,7 @@
                 @for (group of filteredPinGroups(); track group.agent.id) {
                 <mat-optgroup [label]="group.agent.name">
                   @for(pin of group.pins; track pin.id) {
-                  <mat-option [value]="pin">
+                  <mat-option [value]="pin.id">
                     {{ pin.name }}
                   </mat-option>
                   }

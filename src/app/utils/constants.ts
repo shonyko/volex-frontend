@@ -1,0 +1,18 @@
+export const Events = Object.freeze({
+  PAIR: 'pair',
+  CONFIG: 'conf',
+  PARAM_VALUE: 'param_value',
+  PIN_VALUE: 'pin_value',
+  PIN_SOURCE: 'pin_source',
+  CONNECT: 'conn',
+  DISCONNECT: 'dconn',
+  PING: 'ping',
+  PONG: 'pong',
+  MESSAGE: 'msg',
+  BROADCAST: 'event',
+  NEW_PAIR_REQUEST: 'new_pair_request',
+  DEL_PAIR_REQUEST: 'del_pair_request',
+  NEW_PARAM: 'new_param',
+  NEW_PIN: 'new_pin',
+  NEW_AGENT: 'new_agent',
+});

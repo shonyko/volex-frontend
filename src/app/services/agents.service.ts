@@ -5,6 +5,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MockDataService } from './mock-data.service';
 import { BaseService } from './base-service';
 import { useMockData } from '../utils/config';
+import { WebsocketService } from './websocket.service';
+import { Events } from '../utils/constants';
 
 @Injectable({
   providedIn: 'root',
@@ -12,6 +14,7 @@ import { useMockData } from '../utils/config';
 export class AgentsService extends BaseService<Agent> {
   private http = inject(HttpClient);
   private mockData = inject(MockDataService);
+  private websocket = inject(WebsocketService);
 
   public loaded = signal(false);
 
@@ -25,6 +28,9 @@ export class AgentsService extends BaseService<Agent> {
         }
         this.loaded.set(true);
       });
+    this.websocket.on(Events.NEW_AGENT, (a: Agent) => {
+      this.updateItem(a);
+    });
   }
 
   private getMockData() {

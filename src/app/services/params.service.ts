@@ -5,6 +5,8 @@ import { MockDataService } from './mock-data.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HttpClient } from '@angular/common/http';
 import { useMockData } from '../utils/config';
+import { WebsocketService } from './websocket.service';
+import { Events } from '../utils/constants';
 
 @Injectable({
   providedIn: 'root',
@@ -12,6 +14,7 @@ import { useMockData } from '../utils/config';
 export class ParamsService extends BaseService<Param> {
   private http = inject(HttpClient);
   private mockData = inject(MockDataService);
+  private websocket = inject(WebsocketService);
 
   public loaded = signal(false);
 
@@ -25,6 +28,20 @@ export class ParamsService extends BaseService<Param> {
         }
         this.loaded.set(true);
       });
+    this.websocket.on(Events.PARAM_VALUE, ({ id, value }) => {
+      // const change = JSON.parse(args) as { id: number; value: string };
+      const param = this.getWritableById(Number(id));
+      if (param == null) {
+        return;
+      }
+      param.update((p) => ({
+        ...p,
+        value: value,
+      }));
+    });
+    this.websocket.on(Events.NEW_PARAM, (p: Param) => {
+      this.updateItem(p);
+    });
   }
 
   private getMockData() {

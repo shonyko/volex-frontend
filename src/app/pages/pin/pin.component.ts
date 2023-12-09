@@ -127,15 +127,18 @@ export class PinComponent {
   });
 
   sourcePinEffect = effect(() => {
-    this.sourcePinCtrl.setValue(this.sourcePin(), { emitEvent: false });
+    const srcId = this.sourcePin()?.id ?? null;
+    this.sourcePinCtrl.setValue(srcId, { emitEvent: false });
   });
 
-  sourcePinCtrl: FormControl<Pin | null> = new FormControl<Pin | null>(null);
+  sourcePinCtrl: FormControl<number | null> = new FormControl<number | null>(
+    null
+  );
 
   onSourceSelected = this.sourcePinCtrl.valueChanges
     .pipe(takeUntilDestroyed())
-    .subscribe((src) => {
-      if (src == null) {
+    .subscribe((srcId) => {
+      if (srcId == null) {
         return;
       }
 
@@ -144,7 +147,7 @@ export class PinComponent {
         return;
       }
 
-      this.pinsService.connect(pinId, src.id).subscribe({
+      this.pinsService.connect(pinId, srcId).subscribe({
         next() {
           console.log('success');
         },
@@ -204,6 +207,15 @@ export class PinComponent {
       return;
     }
     this.manualValueCtrl.setValue(parseValue(pin), { emitEvent: false });
+  });
+
+  // I don't like this
+  srcPinValueEffect = effect(() => {
+    const src = this.sourcePin();
+    if (src == null) {
+      return;
+    }
+    this.manualValueCtrl.setValue(parseValue(src), { emitEvent: false });
   });
 
   manualValueCtrl = new FormControl<any>({ value: null, disabled: false });
