@@ -15,4 +15,6 @@ export const Events = Object.freeze({
   NEW_PARAM: 'new_param',
   NEW_PIN: 'new_pin',
   NEW_AGENT: 'new_agent',
+  NEW_BLUEPRINT: 'new_blueprint',
+  DEL_BLUEPRINT: 'del_blueprint',
 });
