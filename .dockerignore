@@ -1,5 +1,11 @@
-.vscode
+.idea
 node_modules
-README.md
 .gitignore
+docker-compose.yml
+Dockerfile
+LICENSE
+
+.vscode
+notes.md
+README.md
 .editorconfig
