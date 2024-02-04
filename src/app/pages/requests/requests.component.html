@@ -21,7 +21,9 @@
           class="mb-1 ms-2 ps-1 pe-0 text-primary d-flex justify-content-between"
         >
           <span class="pl-1 align-middle">
-            {{ blueprintsService.getById(request().id)()?.displayName }}
+            {{
+              blueprintsService.getById(request().blueprintId)()?.displayName
+            }}
           </span>
         </h5>
         <form class="container-fluid">

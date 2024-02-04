@@ -193,9 +193,9 @@ export class PinComponent {
     }
 
     return groups.filter((g) => {
-      const showGroup = g.agent.name.includes(search);
+      const showGroup = g.agent.name.toLowerCase().includes(search);
       if (!showGroup) {
-        g.pins = g.pins.filter((p) => p.name.includes(search));
+        g.pins = g.pins.filter((p) => p.name.toLowerCase().includes(search));
       }
       return g.pins.length > 0;
     });

@@ -7,6 +7,7 @@ import { BaseService } from './base-service';
 import { useMockData } from '../utils/config';
 import { WebsocketService } from './websocket.service';
 import { Events } from '../utils/constants';
+import { tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -47,5 +48,15 @@ export class AgentsService extends BaseService<Agent> {
 
   get agents() {
     return this.readOnlyList;
+  }
+
+  createVirtual(blueprintId: number) {
+    return this.http
+      .post<Agent>(`/api/agents/add-virtual?blueprintId=${blueprintId}`, null)
+      .pipe(
+        tap((a: Agent) => {
+          this.updateItem(a);
+        })
+      );
   }
 }

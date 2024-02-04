@@ -1,0 +1,52 @@
+<h2 class="mb-0 d-flex">
+  <button type="button" class="btn btn-sm py-0" routerLink="..">
+    <span class="bi-box-arrow-left fs-2"></span>
+  </button>
+
+  <span class="align-middle flex-grow-1 py-1">Select blueprint</span>
+</h2>
+<hr class="mt-1 mb-2" />
+
+<div
+  class="px-0 d-flex flex-column flex-sm-row flex-xl-row flex-lg-row flex-md-row"
+>
+  <div class="padding"></div>
+  <div class="content">
+    <div class="card m-1 border-0 app-card-min-width">
+      <div class="card-body p-0">
+        <div class="input-group input-group-xs">
+          <input
+            #search_bar
+            type="text"
+            class="form-control search-bar"
+            aria-label="Search"
+            (input)="onFilterChanged(search_bar.value)"
+          />
+          <button type="button" class="btn btn-outline-secondary">
+            <span class="bi-search"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+    @for(blueprint of filteredBlueprints(); track blueprint().id) {
+    <div
+      class="card m-1 border-0 app-card-min-width add-agent"
+      (click)="onBlueprintSelected(blueprint())"
+    >
+      <div class="card-body p-0 d-flex">
+        <button
+          id="agents_blueprints"
+          type="button"
+          class="btn btn-outline-success w-100 flex-fill"
+        >
+          <span class="bi-plus-square-dotted"></span>
+          <span> {{ blueprint().displayName }}</span>
+        </button>
+      </div>
+    </div>
+    }@empty {
+    <h5 class="text-danger"><span>Nothing here just yet!</span></h5>
+    }
+  </div>
+  <div class="padding"></div>
+</div>

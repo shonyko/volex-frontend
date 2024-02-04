@@ -36,7 +36,7 @@ export class RequestsComponent implements OnDestroy {
           console.log('success');
         },
         error(err) {
-          console.log('error while allowing request ', err);
+          console.log('error while allowing request:', err);
         },
       });
   }

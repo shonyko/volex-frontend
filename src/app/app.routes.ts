@@ -5,12 +5,17 @@ import { RequestsComponent } from './pages/requests/requests.component';
 import { BlueprintsComponent } from './pages/blueprints/blueprints.component';
 import { AgentComponent } from './pages/agent/agent.component';
 import { PinComponent } from './pages/pin/pin.component';
+import { AddVirtualAgentComponent } from './pages/add-virtual-agent/add-virtual-agent.component';
 
 export const routes: Routes = [
   {
     path: AgentsComponent.PATH,
     children: [
       { path: '', component: AgentsComponent },
+      {
+        path: 'add',
+        component: AddVirtualAgentComponent,
+      },
       {
         path: ':id',
         component: AgentComponent,
