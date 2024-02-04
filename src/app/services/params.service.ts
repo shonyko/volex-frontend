@@ -82,4 +82,16 @@ export class ParamsService extends BaseService<Param> {
   get params() {
     return this.readOnlyList;
   }
+
+  removeFromAgent(agentId: number) {
+    this.itemList.update((ps) => {
+      return ps.filter((p) => {
+        const shouldRemove = p().agentId == agentId;
+        if (shouldRemove) {
+          this.itemMap.delete(p().id);
+        }
+        return !shouldRemove;
+      });
+    });
+  }
 }

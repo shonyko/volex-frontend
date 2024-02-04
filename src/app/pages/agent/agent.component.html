@@ -108,6 +108,7 @@
     <!-- <div
   class="px-0 d-flex flex-column flex-sm-row flex-xl-row flex-lg-row flex-md-row"
 > -->
+    @if(blueprint()?.isHardware === false) {
     <div class="card m-1 border-0 app-card-min-width">
       <div class="card-body p-0">
         <button
@@ -121,6 +122,8 @@
         </button>
       </div>
     </div>
+    }
+
     <!-- </div> -->
   </div>
   <div class="padding"></div>
@@ -150,7 +153,14 @@
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
           No
         </button>
-        <button type="button" class="btn btn-danger">Yes</button>
+        <button
+          type="button"
+          class="btn btn-danger"
+          data-bs-dismiss="modal"
+          (click)="unlink(agentId())"
+        >
+          Yes
+        </button>
       </div>
     </div>
   </div>

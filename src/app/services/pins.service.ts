@@ -126,4 +126,16 @@ export class PinsService extends BaseService<Pin> {
       },
     });
   }
+
+  removeFromAgent(agentId: number) {
+    this.itemList.update((ps) => {
+      return ps.filter((p) => {
+        const shouldRemove = p().agentId == agentId;
+        if (shouldRemove) {
+          this.itemMap.delete(p().id);
+        }
+        return !shouldRemove;
+      });
+    });
+  }
 }

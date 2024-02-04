@@ -1,5 +1,5 @@
-import { Component, computed, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnDestroy, computed, inject } from '@angular/core';
+import { CommonModule, Location } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { AgentsService } from 'src/app/services/agents.service';
 import { BlueprintsService } from 'src/app/services/blueprints.service';
@@ -9,8 +9,9 @@ import { Pin } from 'src/app/models/pin';
 import { PinType } from 'src/app/models/pin-type';
 import { AgentParamComponent } from '../../components/agents/agent-param/agent-param.component';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { EMPTY, filter, map, of, switchMap } from 'rxjs';
+import { EMPTY, Subject, filter, map, of, switchMap, takeUntil } from 'rxjs';
 import { parseId } from 'src/app/utils/parsers';
+import { Agent } from 'src/app/models/agent';
 
 @Component({
   selector: 'app-agent',
@@ -19,12 +20,13 @@ import { parseId } from 'src/app/utils/parsers';
   styleUrl: './agent.component.scss',
   imports: [CommonModule, AgentParamComponent, RouterLink],
 })
-export class AgentComponent {
+export class AgentComponent implements OnDestroy {
   private route = inject(ActivatedRoute);
   private agentsService = inject(AgentsService);
   private blueprintsService = inject(BlueprintsService);
   private paramsService = inject(ParamsService);
   private pinsService = inject(PinsService);
+  private location = inject(Location);
 
   idParam$ = this.route.paramMap.pipe(
     takeUntilDestroyed(),
@@ -101,5 +103,29 @@ export class AgentComponent {
 
   getPinPath(pin: Pin) {
     return `pins/${pin.id}`;
+  }
+
+  private destroyed$ = new Subject<boolean>();
+
+  ngOnDestroy(): void {
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
+  }
+
+  unlink(agentId: number) {
+    const location = this.location;
+    this.agentsService
+      .unlink(agentId)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe({
+        next() {
+          console.log('success');
+          location.back();
+        },
+        error(err) {
+          console.log('error while unlinking virtual agent:', err);
+          location.back();
+        },
+      });
   }
 }

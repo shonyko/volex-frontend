@@ -8,6 +8,8 @@ import { useMockData } from '../utils/config';
 import { WebsocketService } from './websocket.service';
 import { Events } from '../utils/constants';
 import { tap } from 'rxjs';
+import { ParamsService } from './params.service';
+import { PinsService } from './pins.service';
 
 @Injectable({
   providedIn: 'root',
@@ -16,6 +18,8 @@ export class AgentsService extends BaseService<Agent> {
   private http = inject(HttpClient);
   private mockData = inject(MockDataService);
   private websocket = inject(WebsocketService);
+  private paramsService = inject(ParamsService);
+  private pinsService = inject(PinsService);
 
   public loaded = signal(false);
 
@@ -58,5 +62,16 @@ export class AgentsService extends BaseService<Agent> {
           this.updateItem(a);
         })
       );
+  }
+
+  unlink(id: number) {
+    return this.http.delete(`/api/agents/${id}`).pipe(
+      tap((_) => {
+        this.paramsService.removeFromAgent(id);
+        this.pinsService.removeFromAgent(id);
+        this.itemList.update((l) => l.filter((a) => a().id != id));
+        this.itemMap.delete(id);
+      })
+    );
   }
 }
